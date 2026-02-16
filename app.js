@@ -34,7 +34,11 @@ function goAuthStep(step) {
   dots.forEach((dot, i) => dot.classList.toggle('on', i === authStep));
 }
 
-setTimeout(() => activate('auth'), 1350);
+const splashNextBtn = document.getElementById('splashNextBtn');
+
+if (splashNextBtn) {
+  splashNextBtn.addEventListener('click', () => activate('auth'));
+}
 
 // Auth flow (3 screens)
 document.getElementById('forgotForm').addEventListener('submit', (e) => {

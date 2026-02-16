@@ -25,14 +25,64 @@ input:focus, textarea:focus { border-color: #8ac7ff !important; box-shadow: 0 0 
 .jarvis-logo.orb { width: 94px; height: 94px; margin: 0 auto 10px; }
 
 /* Splash */
-.splash { justify-content: center; align-items: center; background: #fff; }
-.splash-mockup { width: 84%; border-radius: 24px; overflow: hidden; border: 1px solid #ecedf4; background: #fff; box-shadow: 0 20px 40px #5868a31f; }
-.splash-header { height: 110px; background: linear-gradient(140deg, #5f63ff, #8a6dff 60%, #b06dff); }
-.splash-content { padding: 16px 16px 18px; text-align: center; }
-.splash-content h1 { margin: 10px 0 4px; font-size: 34px; }
-.splash-content p { margin: 0 0 12px; opacity: .72; }
-.splash-pill { margin: 0 auto; max-width: 220px; border: 1px solid #e6e9f4; border-radius: 999px; display: flex; justify-content: space-between; align-items: center; padding: 4px 4px 4px 12px; font-size: 13px; }
-.splash-pill button { border: 0; width: 28px; height: 28px; border-radius: 50%; color: #fff; background: linear-gradient(120deg, #5f63ff, #9a6cff); }
+.splash { justify-content: center; align-items: center; background: #ffffff; }
+.splash-mockup {
+  width: min(92vw, 360px);
+  min-height: 640px;
+  border-radius: 28px;
+  overflow: hidden;
+  border: 1px solid #ebeef6;
+  background: #fff;
+  box-shadow: 0 24px 48px #455e9d24;
+}
+.splash-status {
+  height: 84px;
+  background: linear-gradient(180deg, #fefeff, #f7f9ff);
+}
+.splash-content {
+  min-height: calc(640px - 84px);
+  padding: 24px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.splash-content .jarvis-logo.large {
+  width: 170px;
+  height: 170px;
+  margin: 12px auto 0;
+}
+.splash-content h1 {
+  margin: 18px 0 6px;
+  font-size: 46px;
+  line-height: .95;
+  letter-spacing: -.6px;
+  font-family: 'Playfair Display', serif;
+}
+.splash-content p {
+  margin: 0;
+  color: #5d6578;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.splash-pill {
+  margin-top: 28px;
+  border: 1px solid #dfe5f3;
+  border-radius: 999px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 5px 5px 14px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.splash-pill button {
+  border: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(120deg, #111317, #2a2e35);
+}
 
 /* Auth */
 .auth { justify-content: center; background: #f5f6fd; }
