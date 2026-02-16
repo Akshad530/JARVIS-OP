@@ -33,19 +33,20 @@ input:focus, textarea:focus { border-color: #8ac7ff !important; box-shadow: 0 0 
 .splash-pill button { border: 0; width: 34px; height: 34px; border-radius: 50%; color: #fff; background: linear-gradient(120deg, #111317, #2a2e35); }
 
 /* Auth - exact visual direction from reference */
-.auth { justify-content: center; background: #a8a3f5; }
-.auth-frame { width: 100%; max-width: 376px; margin: 0 auto; border-radius: 28px; overflow: hidden; box-shadow: 0 20px 44px #2f2b7a44; }
+.auth { justify-content: center; background: linear-gradient(180deg,#dfe9ff,#cadcff); }
+.auth-frame { width: 100%; max-width: 376px; margin: 0 auto; border-radius: 28px; overflow: hidden; box-shadow: 0 28px 60px #3d58a84d, inset 0 1px 0 #ffffffaa; transform: translateZ(0); }
 .auth-slider { display: flex; width: 300%; transition: transform .35s ease; }
 .auth-step { width: 100%; min-height: 690px; }
 
 .welcome-step {
   position: relative;
   background:
-    radial-gradient(60px 60px at 12% 6%, #111f98 0 48%, transparent 49%),
-    radial-gradient(72px 72px at 18% 88%, #2f45ff 0 40%, transparent 41%),
-    radial-gradient(86px 86px at 72% 96%, #101d90 0 36%, transparent 37%),
-    radial-gradient(120px 120px at 86% 20%, #6e75ff 0 42%, transparent 43%),
-    linear-gradient(180deg, #0915a8 0%, #111db9 60%, #050f8d 100%);
+    radial-gradient(60px 60px at 12% 6%, #2647c7 0 48%, transparent 49%),
+    radial-gradient(72px 72px at 18% 88%, #4f86ff 0 40%, transparent 41%),
+    radial-gradient(86px 86px at 72% 96%, #2b5ac9 0 36%, transparent 37%),
+    radial-gradient(120px 120px at 86% 20%, #8ab4ff 0 42%, transparent 43%),
+    linear-gradient(180deg, #2f56dd 0%, #3f79ff 60%, #2454cf 100%);
+  animation: floaty 5s ease-in-out infinite;
 }
 .shape-layer {
   position: absolute;
@@ -54,7 +55,7 @@ input:focus, textarea:focus { border-color: #8ac7ff !important; box-shadow: 0 0 
     radial-gradient(160px 120px at 88% 26%, #7d86ff 0 46%, transparent 47%),
     radial-gradient(190px 170px at 62% 26%, #5a61df 0 46%, transparent 47%),
     radial-gradient(220px 120px at 26% 40%, #fff 0 34%, transparent 35%);
-  opacity: .45;
+  opacity: .55;
 }
 .welcome-content {
   position: absolute;
@@ -63,11 +64,11 @@ input:focus, textarea:focus { border-color: #8ac7ff !important; box-shadow: 0 0 
   color: #fff;
   padding: 0 28px;
 }
-.welcome-content h3 { margin: 0 0 8px; font-size: 46px; letter-spacing: -.4px; }
+.welcome-content h3 { margin: 0 0 8px; font-size: 46px; letter-spacing: -.4px; text-shadow: 0 8px 24px #1f3f9b66; }
 .welcome-content p { margin: 0 0 22px; opacity: .92; }
 .welcome-btn { width: 100%; border-radius: 999px; padding: 12px; border: 0; font-weight: 700; margin-bottom: 10px; }
-.welcome-btn.primary { background: #fff; color: #0e1dad; }
-.welcome-btn.secondary { background: #ffffff22; color: #fff; border: 1px solid #ffffff8c; }
+.welcome-btn.primary { background: #fff; color: #0e1dad; box-shadow: 0 10px 20px #0f34ab4d; }
+.welcome-btn.secondary { background: #ffffff2a; color: #fff; border: 1px solid #ffffff9a; }
 
 .form-step { background: #fff; border: 1px solid #e8eaf2; border-radius: 26px; overflow: hidden; }
 .form-step::before {
@@ -75,9 +76,9 @@ input:focus, textarea:focus { border-color: #8ac7ff !important; box-shadow: 0 0 
   display: block;
   height: 140px;
   background:
-    radial-gradient(58px 58px at 12% 12%, #1228ac 0 45%, transparent 46%),
-    radial-gradient(160px 140px at 84% 12%, #5f63ff 0 48%, transparent 49%),
-    linear-gradient(180deg, #4150de, #6971ff);
+    radial-gradient(58px 58px at 12% 12%, #2a52cc 0 45%, transparent 46%),
+    radial-gradient(160px 140px at 84% 12%, #72a2ff 0 48%, transparent 49%),
+    linear-gradient(180deg, #4f79ef, #7bb0ff);
 }
 .form-top { margin-top: -12px; text-align: center; font-size: 46px; color: #14289f; font-weight: 700; }
 .auth-form { display: grid; gap: 10px; padding: 16px; }
@@ -87,12 +88,12 @@ input:focus, textarea:focus { border-color: #8ac7ff !important; box-shadow: 0 0 
 .auth-form input[type='password'] { border: 1px solid #d8deea; border-radius: 12px; padding: 11px; background: #fafcff; }
 .checkline { display: flex !important; align-items: center; gap: 8px; font-size: 12px !important; }
 .checkline input { width: 14px; height: 14px; }
-.primary-btn { border: 0; border-radius: 10px; padding: 12px 14px; color: #fff; font-weight: 700; background: linear-gradient(95deg, #1530d8, #2b53ff); }
+.primary-btn { border: 0; border-radius: 10px; padding: 12px 14px; color: #fff; font-weight: 700; background: linear-gradient(95deg, #2a5ce8, #5ea0ff); box-shadow: 0 10px 18px #2f68d54a; }
 .rowline { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
 .rowline a { color: #3046c7; text-decoration: none; }
 .form-footer { padding: 0 16px 16px; text-align: center; font-size: 12px; color: #73819d; }
 .form-footer button { border: 0; background: none; color: #1f35bf; font-weight: 700; }
-.dots { display: flex; justify-content: center; gap: 8px; padding: 8px 0 14px; background: #a8a3f5; }
+.dots { display: flex; justify-content: center; gap: 8px; padding: 8px 0 14px; background: #cadcff; }
 .dots span { width: 8px; height: 8px; border-radius: 50%; background: #d5d2ff; }
 .dots .on { background: #ffffff; }
 
@@ -163,3 +164,13 @@ input:focus, textarea:focus { border-color: #8ac7ff !important; box-shadow: 0 0 
   .welcome-content h3 { font-size: 40px; }
   .form-top { font-size: 40px; }
 }
+
+
+@keyframes floaty {
+  0%,100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+.splash-mockup { animation: cardIn .6s ease both; }
+.auth-frame { animation: cardIn .6s ease both; }
+@keyframes cardIn { from { opacity:0; transform: translateY(12px) scale(.98);} to {opacity:1; transform: translateY(0) scale(1);} }
