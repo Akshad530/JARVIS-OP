@@ -35,26 +35,30 @@ function goAuthStep(step) {
 }
 
 const splashNextBtn = document.getElementById('splashNextBtn');
+if (splashNextBtn) splashNextBtn.addEventListener('click', () => activate('auth'));
 
-if (splashNextBtn) {
-  splashNextBtn.addEventListener('click', () => activate('auth'));
-}
+// Auth flow
+const signInWelcome = document.getElementById('signInWelcome');
+const signUpWelcome = document.getElementById('signUpWelcome');
+const goLoginLink = document.getElementById('goLoginLink');
+const goSignupLink = document.getElementById('goSignupLink');
 
-// Auth flow (3 screens)
-document.getElementById('forgotForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  goAuthStep(1);
-});
-
-document.getElementById('otpForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  if (document.getElementById('otpCode').value.trim().length < 4) return;
-  goAuthStep(2);
-});
+signInWelcome?.addEventListener('click', () => goAuthStep(2));
+signUpWelcome?.addEventListener('click', () => goAuthStep(1));
+goLoginLink?.addEventListener('click', () => goAuthStep(2));
+goSignupLink?.addEventListener('click', () => goAuthStep(1));
 
 document.getElementById('createForm').addEventListener('submit', (e) => {
   e.preventDefault();
   state.name = document.getElementById('nameInput').value.trim() || 'Jason';
+  document.getElementById('greetName').textContent = `Good Afternoon, ${state.name}.`;
+  activate('landing');
+});
+
+document.getElementById('loginForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim();
+  state.name = email ? email.split('@')[0] : 'Jason';
   document.getElementById('greetName').textContent = `Good Afternoon, ${state.name}.`;
   activate('landing');
 });
@@ -181,8 +185,7 @@ async function fetchWikipediaSummary(prompt) {
   try {
     const title = (await searchWikipediaTitle(prompt)) || prompt.split('?')[0].trim().slice(0, 80);
     if (!title) return null;
-    const encodedTitle = encodeURIComponent(title);
-    const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodedTitle}`);
+    const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`);
     if (!res.ok) return null;
     const data = await res.json();
     if (!data.extract || data.type === 'disambiguation') return null;

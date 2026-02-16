@@ -2,9 +2,6 @@
   --bg: #f8f9fc;
   --char: #1d2432;
   --line: #e5eaf3;
-  --blueA: #5f63ff;
-  --blueB: #7b68ff;
-  --blueC: #a05dff;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; min-height: 100%; font-family: 'DM Sans', sans-serif; color: var(--char); }
@@ -26,90 +23,81 @@ input:focus, textarea:focus { border-color: #8ac7ff !important; box-shadow: 0 0 
 
 /* Splash */
 .splash { justify-content: center; align-items: center; background: #ffffff; }
-.splash-mockup {
-  width: min(92vw, 360px);
-  min-height: 640px;
-  border-radius: 28px;
-  overflow: hidden;
-  border: 1px solid #ebeef6;
-  background: #fff;
-  box-shadow: 0 24px 48px #455e9d24;
-}
-.splash-status {
-  height: 84px;
-  background: linear-gradient(180deg, #fefeff, #f7f9ff);
-}
-.splash-content {
-  min-height: calc(640px - 84px);
-  padding: 24px 20px 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.splash-content .jarvis-logo.large {
-  width: 170px;
-  height: 170px;
-  margin: 12px auto 0;
-}
-.splash-content h1 {
-  margin: 18px 0 6px;
-  font-size: 46px;
-  line-height: .95;
-  letter-spacing: -.6px;
-  font-family: 'Playfair Display', serif;
-}
-.splash-content p {
-  margin: 0;
-  color: #5d6578;
-  font-size: 14px;
-  line-height: 1.45;
-}
-.splash-pill {
-  margin-top: 28px;
-  border: 1px solid #dfe5f3;
-  border-radius: 999px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 5px 5px 14px;
-  font-size: 12px;
-  font-weight: 700;
-}
-.splash-pill button {
-  border: 0;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  color: #fff;
-  background: linear-gradient(120deg, #111317, #2a2e35);
-}
+.splash-mockup { width: min(92vw, 360px); min-height: 640px; border-radius: 28px; overflow: hidden; border: 1px solid #ebeef6; background: #fff; box-shadow: 0 24px 48px #455e9d24; }
+.splash-status { height: 84px; background: linear-gradient(180deg, #fefeff, #f7f9ff); }
+.splash-content { min-height: calc(640px - 84px); padding: 24px 20px 20px; display: flex; flex-direction: column; justify-content: space-between; }
+.splash-content .jarvis-logo.large { width: 170px; height: 170px; margin: 12px auto 0; }
+.splash-content h1 { margin: 18px 0 6px; font-size: 46px; line-height: .95; letter-spacing: -.6px; font-family: 'Playfair Display', serif; }
+.splash-content p { margin: 0; color: #5d6578; font-size: 14px; line-height: 1.45; }
+.splash-pill { margin-top: 28px; border: 1px solid #dfe5f3; border-radius: 999px; display: flex; justify-content: space-between; align-items: center; padding: 5px 5px 5px 14px; font-size: 12px; font-weight: 700; }
+.splash-pill button { border: 0; width: 34px; height: 34px; border-radius: 50%; color: #fff; background: linear-gradient(120deg, #111317, #2a2e35); }
 
-/* Auth */
-.auth { justify-content: center; background: #f5f6fd; }
-.auth-frame { border: 1px solid #e7ebf5; border-radius: 24px; overflow: hidden; background: #fff; box-shadow: 0 20px 44px #6a7bb123; }
+/* Auth - exact visual direction from reference */
+.auth { justify-content: center; background: #a8a3f5; }
+.auth-frame { width: 100%; max-width: 376px; margin: 0 auto; border-radius: 28px; overflow: hidden; box-shadow: 0 20px 44px #2f2b7a44; }
 .auth-slider { display: flex; width: 300%; transition: transform .35s ease; }
-.auth-step { width: 100%; min-height: 620px; }
-.auth-gradient-head { background: linear-gradient(140deg, #5660ff, #8168ff 60%, #a86cff); color: #fff; padding: 16px 16px 22px; border-radius: 0 0 24px 24px; }
-.top-brand { display: flex; align-items: center; gap: 8px; justify-content: center; font-weight: 700; }
-.auth-gradient-head h3 { text-align: center; font-size: 30px; margin: 10px 0 0; }
-.auth-form { display: grid; gap: 12px; padding: 16px; }
-.auth-form label { display: grid; gap: 7px; color: #69778f; font-size: 14px; }
-.auth-form input { border: 1px solid var(--line); border-radius: 14px; padding: 12px; background: #fbfcff; }
-.primary-btn { border: 0; border-radius: 999px; padding: 12px 14px; color: #fff; font-weight: 700; background: linear-gradient(95deg, #5f63ff, #a06fff); }
-.social-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.social-row button { border: 1px solid #e6eaf2; background: #fff; border-radius: 999px; padding: 9px 10px; }
-.auth-form small { opacity: .68; }
-.dots { display: flex; justify-content: center; gap: 8px; padding: 8px 0 14px; }
-.dots span { width: 8px; height: 8px; border-radius: 50%; background: #d2d9eb; }
-.dots .on { background: #5f63ff; }
+.auth-step { width: 100%; min-height: 690px; }
+
+.welcome-step {
+  position: relative;
+  background:
+    radial-gradient(60px 60px at 12% 6%, #111f98 0 48%, transparent 49%),
+    radial-gradient(72px 72px at 18% 88%, #2f45ff 0 40%, transparent 41%),
+    radial-gradient(86px 86px at 72% 96%, #101d90 0 36%, transparent 37%),
+    radial-gradient(120px 120px at 86% 20%, #6e75ff 0 42%, transparent 43%),
+    linear-gradient(180deg, #0915a8 0%, #111db9 60%, #050f8d 100%);
+}
+.shape-layer {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(160px 120px at 88% 26%, #7d86ff 0 46%, transparent 47%),
+    radial-gradient(190px 170px at 62% 26%, #5a61df 0 46%, transparent 47%),
+    radial-gradient(220px 120px at 26% 40%, #fff 0 34%, transparent 35%);
+  opacity: .45;
+}
+.welcome-content {
+  position: absolute;
+  inset: auto 0 52px;
+  text-align: center;
+  color: #fff;
+  padding: 0 28px;
+}
+.welcome-content h3 { margin: 0 0 8px; font-size: 46px; letter-spacing: -.4px; }
+.welcome-content p { margin: 0 0 22px; opacity: .92; }
+.welcome-btn { width: 100%; border-radius: 999px; padding: 12px; border: 0; font-weight: 700; margin-bottom: 10px; }
+.welcome-btn.primary { background: #fff; color: #0e1dad; }
+.welcome-btn.secondary { background: #ffffff22; color: #fff; border: 1px solid #ffffff8c; }
+
+.form-step { background: #fff; border: 1px solid #e8eaf2; border-radius: 26px; overflow: hidden; }
+.form-step::before {
+  content: '';
+  display: block;
+  height: 140px;
+  background:
+    radial-gradient(58px 58px at 12% 12%, #1228ac 0 45%, transparent 46%),
+    radial-gradient(160px 140px at 84% 12%, #5f63ff 0 48%, transparent 49%),
+    linear-gradient(180deg, #4150de, #6971ff);
+}
+.form-top { margin-top: -12px; text-align: center; font-size: 46px; color: #14289f; font-weight: 700; }
+.auth-form { display: grid; gap: 10px; padding: 16px; }
+.auth-form label { display: grid; gap: 6px; font-size: 13px; color: #63708a; }
+.auth-form input[type='text'],
+.auth-form input[type='email'],
+.auth-form input[type='password'] { border: 1px solid #d8deea; border-radius: 12px; padding: 11px; background: #fafcff; }
+.checkline { display: flex !important; align-items: center; gap: 8px; font-size: 12px !important; }
+.checkline input { width: 14px; height: 14px; }
+.primary-btn { border: 0; border-radius: 10px; padding: 12px 14px; color: #fff; font-weight: 700; background: linear-gradient(95deg, #1530d8, #2b53ff); }
+.rowline { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+.rowline a { color: #3046c7; text-decoration: none; }
+.form-footer { padding: 0 16px 16px; text-align: center; font-size: 12px; color: #73819d; }
+.form-footer button { border: 0; background: none; color: #1f35bf; font-weight: 700; }
+.dots { display: flex; justify-content: center; gap: 8px; padding: 8px 0 14px; background: #a8a3f5; }
+.dots span { width: 8px; height: 8px; border-radius: 50%; background: #d5d2ff; }
+.dots .on { background: #ffffff; }
 
 /* Landing */
-.landing {
-  background:
-    radial-gradient(95% 56% at 18% 16%, #cae9ff 0 44%, transparent 45%),
-    radial-gradient(62% 44% at 96% 8%, #ff986f 0 34%, transparent 68%),
-    linear-gradient(140deg, #f8f4ef, #d7ebfb);
-}
+.landing { background: radial-gradient(95% 56% at 18% 16%, #cae9ff 0 44%, transparent 45%), radial-gradient(62% 44% at 96% 8%, #ff986f 0 34%, transparent 68%), linear-gradient(140deg, #f8f4ef, #d7ebfb); }
 .landing-nav { display: flex; justify-content: space-between; align-items: center; background: #ffffffe3; border: 1px solid #f0f1f5; border-radius: 18px; padding: 8px 10px; }
 .brand-row { display: flex; align-items: center; gap: 8px; }
 .brand-row span, .brand-row strong { font-family: 'Playfair Display', serif; font-size: 18px; }
@@ -172,4 +160,6 @@ input:focus, textarea:focus { border-color: #8ac7ff !important; box-shadow: 0 0 
 
 @media (max-width: 360px) {
   .cta { font-size: 17px; }
+  .welcome-content h3 { font-size: 40px; }
+  .form-top { font-size: 40px; }
 }

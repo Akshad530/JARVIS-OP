@@ -50,39 +50,37 @@
       <section id="authCarousel" class="screen auth hidden">
         <div class="auth-frame">
           <div class="auth-slider" id="authSlider">
-            <article class="auth-step">
-              <div class="auth-gradient-head">
-                <div class="top-brand"><div class="jarvis-logo tiny"></div><span>JARVIS</span></div>
-                <h3>Welcome Back</h3>
+            <article class="auth-step welcome-step">
+              <div class="shape-layer"></div>
+              <div class="welcome-content">
+                <h3>Welcome Back!</h3>
+                <p>Enter details to get your personal account</p>
+                <button id="signInWelcome" class="welcome-btn primary">Sign in →</button>
+                <button id="signUpWelcome" class="welcome-btn secondary">Sign up →</button>
               </div>
-              <form class="auth-form" id="forgotForm">
-                <label>Email address<input id="forgotEmail" type="email" placeholder="hello@jarvis.ai" required /></label>
-                <button type="submit" class="primary-btn">Continue</button>
-                <div class="social-row"><button type="button">Google</button><button type="button">Facebook</button></div>
-              </form>
             </article>
-            <article class="auth-step">
-              <div class="auth-gradient-head">
-                <div class="top-brand"><div class="jarvis-logo tiny"></div><span>JARVIS</span></div>
-                <h3>Email OTP</h3>
-              </div>
-              <form class="auth-form" id="otpForm">
-                <label>OTP Code<input id="otpCode" type="text" maxlength="6" placeholder="123456" required /></label>
-                <button type="submit" class="primary-btn">Verify</button>
-                <small>We sent the verification code to your email.</small>
-              </form>
-            </article>
-            <article class="auth-step">
-              <div class="auth-gradient-head">
-                <div class="top-brand"><div class="jarvis-logo tiny"></div><span>JARVIS</span></div>
-                <h3>Get started free.</h3>
-              </div>
+
+            <article class="auth-step form-step signup-step">
+              <div class="form-top">Get Started</div>
               <form class="auth-form" id="createForm">
-                <label>Name<input id="nameInput" type="text" placeholder="Jason Miller" required /></label>
-                <label>Email<input id="emailInput" type="email" placeholder="giga@example.com" required /></label>
-                <label>Password<input id="passInput" type="password" placeholder="••••••••" minlength="6" required /></label>
-                <button type="submit" class="primary-btn">Enter JARVIS</button>
+                <label>Full Name<input id="nameInput" type="text" placeholder="Enter Full Name" required /></label>
+                <label>Email<input id="emailInput" type="email" placeholder="Enter Email" required /></label>
+                <label>Password<input id="passInput" type="password" placeholder="Enter Password" minlength="6" required /></label>
+                <label class="checkline"><input type="checkbox" required />I agree to the processing of personal data</label>
+                <button type="submit" class="primary-btn">Sign up →</button>
               </form>
+              <div class="form-footer">Already have an account? <button type="button" id="goLoginLink">Sign in</button></div>
+            </article>
+
+            <article class="auth-step form-step signin-step">
+              <div class="form-top">Welcome Back</div>
+              <form class="auth-form" id="loginForm">
+                <label>Email<input id="loginEmail" type="email" placeholder="Enter Email" required /></label>
+                <label>Password<input id="loginPass" type="password" placeholder="Enter Password" required /></label>
+                <div class="rowline"><label class="checkline"><input type="checkbox" />Remember me</label><a href="#">Forgot Password?</a></div>
+                <button type="submit" class="primary-btn">Sign in →</button>
+              </form>
+              <div class="form-footer">Don't have an account? <button type="button" id="goSignupLink">Sign up</button></div>
             </article>
           </div>
           <div class="dots"><span class="on"></span><span></span><span></span></div>
