@@ -45,6 +45,25 @@
           </button>
         </div>
 
+
+
+        <div class="ai-setup">
+          <h5 class="side-section">AI SETUP</h5>
+          <label class="setup-field">Provider
+            <select id="aiProvider">
+              <option value="openai">OpenAI</option>
+              <option value="gemini">Gemini</option>
+            </select>
+          </label>
+          <label class="setup-field">API Key
+            <input id="aiApiKey" type="password" placeholder="Paste your API key" />
+          </label>
+          <label class="setup-field">Model
+            <input id="aiModel" type="text" placeholder="gpt-4o-mini or gemini-1.5-flash" />
+          </label>
+          <button id="saveAiConfig" class="setup-save">Save AI Config</button>
+        </div>
+
         <button class="logout-btn" data-route="landing">
           <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
           Log out
