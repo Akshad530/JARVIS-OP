@@ -15,25 +15,35 @@
 
       <aside class="sidebar" id="sidebar">
         <div class="side-head">
-          <div class="brand-row"><div class="jarvis-logo"></div><strong>JARVIS</strong></div>
-          <button class="icon-btn" id="closeSidebar">✕</button>
+          <div class="brand-row"><div class="jarvis-logo tiny"></div><strong>JARVIS</strong></div>
+          <button class="icon-btn" id="closeSidebar" aria-label="Close sidebar">✕</button>
         </div>
-        <button class="new-chat-btn" id="newChatBtn">✨ New Chat</button>
-        <label class="search-wrap"><span>🔎</span><input id="searchChat" placeholder="Search conversations" /></label>
+        <button class="new-chat-btn" id="newChatBtn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          New Chat
+        </button>
+        <label class="search-wrap">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4z"/></svg>
+          <input id="searchChat" placeholder="Search conversations" />
+        </label>
         <div class="side-nav">
-          <button data-route="landing">🏠 Home</button>
-          <button data-route="chat">💬 Discover</button>
-          <button data-route="chat">🧪 Labs</button>
+          <button data-route="landing"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+          <button data-route="chat"><svg viewBox="0 0 24 24"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4v-4H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/></svg>Discover</button>
+          <button data-route="chat"><svg viewBox="0 0 24 24"><path d="M12 3l2.2 4.5L19 9l-3.5 3.4.8 4.8-4.3-2.3-4.3 2.3.8-4.8L5 9l4.8-1.5z"/></svg>Labs</button>
         </div>
         <h4>Saved chats</h4>
         <div id="conversationList" class="conversation-list"></div>
       </aside>
 
       <section id="splashScreen" class="screen splash active">
-        <div class="splash-center">
-          <div class="jarvis-logo large"></div>
-          <h1>JARVIS</h1>
-          <p>Premium AI Assistant</p>
+        <div class="splash-mockup">
+          <div class="splash-header"></div>
+          <div class="splash-content">
+            <div class="jarvis-logo large"></div>
+            <h1>JARVIS</h1>
+            <p>Automate your planning</p>
+            <div class="splash-pill"><span>Get Started</span><button>➜</button></div>
+          </div>
         </div>
       </section>
 
@@ -41,27 +51,32 @@
         <div class="auth-frame">
           <div class="auth-slider" id="authSlider">
             <article class="auth-step">
-              <div class="top-brand"><div class="jarvis-logo tiny"></div><span>JARVIS</span></div>
-              <h3>Forgot password?</h3>
-              <p>Enter your email to recover your account.</p>
+              <div class="auth-gradient-head">
+                <div class="top-brand"><div class="jarvis-logo tiny"></div><span>JARVIS</span></div>
+                <h3>Welcome Back</h3>
+              </div>
               <form class="auth-form" id="forgotForm">
-                <label>Email<input id="forgotEmail" type="email" placeholder="hello@jarvis.ai" required /></label>
+                <label>Email address<input id="forgotEmail" type="email" placeholder="hello@jarvis.ai" required /></label>
                 <button type="submit" class="primary-btn">Continue</button>
+                <div class="social-row"><button type="button">Google</button><button type="button">Facebook</button></div>
               </form>
             </article>
             <article class="auth-step">
-              <div class="top-brand"><div class="jarvis-logo tiny"></div><span>JARVIS</span></div>
-              <h3>Email OTP</h3>
-              <p>We sent a 6-digit code to your email.</p>
+              <div class="auth-gradient-head">
+                <div class="top-brand"><div class="jarvis-logo tiny"></div><span>JARVIS</span></div>
+                <h3>Email OTP</h3>
+              </div>
               <form class="auth-form" id="otpForm">
                 <label>OTP Code<input id="otpCode" type="text" maxlength="6" placeholder="123456" required /></label>
                 <button type="submit" class="primary-btn">Verify</button>
+                <small>We sent the verification code to your email.</small>
               </form>
             </article>
             <article class="auth-step">
-              <div class="top-brand"><div class="jarvis-logo tiny"></div><span>JARVIS</span></div>
-              <h3>Reset password</h3>
-              <p>Create your account details to continue.</p>
+              <div class="auth-gradient-head">
+                <div class="top-brand"><div class="jarvis-logo tiny"></div><span>JARVIS</span></div>
+                <h3>Get started free.</h3>
+              </div>
               <form class="auth-form" id="createForm">
                 <label>Name<input id="nameInput" type="text" placeholder="Jason Miller" required /></label>
                 <label>Email<input id="emailInput" type="email" placeholder="giga@example.com" required /></label>
@@ -86,10 +101,16 @@
             <button id="needThis" class="cta primary">I Need This</button>
             <button class="cta secondary">Show Me How</button>
           </div>
-          <form id="landingPromptForm" class="landing-prompt">
-            <input id="landingPromptInput" placeholder="Ask anything and jump to chat..." />
-            <button type="submit">➤</button>
-          </form>
+
+          <div class="idea-card">
+            <div class="idea-glow"></div>
+            <h4>Quick Prompt</h4>
+            <p>Type once and jump straight into conversation.</p>
+            <form id="landingPromptForm" class="landing-prompt">
+              <input id="landingPromptInput" placeholder="Ask anything and jump to chat..." />
+              <button type="submit">➤</button>
+            </form>
+          </div>
         </main>
       </section>
 

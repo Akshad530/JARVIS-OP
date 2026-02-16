@@ -5,11 +5,7 @@ const screens = {
   chat: document.getElementById('chatScreen')
 };
 
-const state = {
-  name: 'Jason',
-  conversations: [],
-  currentConversationId: null
-};
+const state = { name: 'Jason', conversations: [], currentConversationId: null };
 
 const sidebar = document.getElementById('sidebar');
 const authSlider = document.getElementById('authSlider');
@@ -38,7 +34,7 @@ function goAuthStep(step) {
   dots.forEach((dot, i) => dot.classList.toggle('on', i === authStep));
 }
 
-setTimeout(() => activate('auth'), 1300);
+setTimeout(() => activate('auth'), 1350);
 
 // Auth flow (3 screens)
 document.getElementById('forgotForm').addEventListener('submit', (e) => {
@@ -73,7 +69,6 @@ document.getElementById('closeSidebar').addEventListener('click', () => sidebar.
   });
 });
 
-// Landing prompt -> jump to chat + ask
 document.getElementById('landingPromptForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const q = document.getElementById('landingPromptInput').value.trim();
@@ -89,7 +84,7 @@ function nowTime() {
 
 function getTopic(text) {
   const cleaned = text.replace(/[?!.]/g, '').trim();
-  return cleaned ? cleaned.split(' ').slice(0, 4).join(' ') : 'General Chat';
+  return cleaned ? cleaned.split(' ').slice(0, 6).join(' ') : 'General Chat';
 }
 
 function currentConversation() {
@@ -112,7 +107,7 @@ function renderConversationList() {
     .forEach((c) => {
       const btn = document.createElement('button');
       btn.className = 'conversation-item';
-      btn.textContent = `📝 ${c.topic}`;
+      btn.textContent = c.topic;
       btn.onclick = () => {
         state.currentConversationId = c.id;
         renderConversation(c);
@@ -166,15 +161,29 @@ function typingNode() {
   return n;
 }
 
-async function fetchWikipediaSummary(prompt) {
+async function searchWikipediaTitle(query) {
   try {
-    const title = encodeURIComponent(prompt.split('?')[0].trim().slice(0, 80));
-    const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${title}`);
+    const q = encodeURIComponent(query.slice(0, 80));
+    const res = await fetch(`https://en.wikipedia.org/w/rest.php/v1/search/title?q=${q}&limit=1`);
     if (!res.ok) return null;
     const data = await res.json();
-    if (!data.extract) return null;
+    return data?.pages?.[0]?.title || null;
+  } catch {
+    return null;
+  }
+}
+
+async function fetchWikipediaSummary(prompt) {
+  try {
+    const title = (await searchWikipediaTitle(prompt)) || prompt.split('?')[0].trim().slice(0, 80);
+    if (!title) return null;
+    const encodedTitle = encodeURIComponent(title);
+    const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodedTitle}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data.extract || data.type === 'disambiguation') return null;
     return {
-      title: data.title || 'Reference',
+      title: data.title || title,
       extract: data.extract,
       source: data.content_urls?.desktop?.page || ''
     };
@@ -188,22 +197,22 @@ function localAnswer(prompt) {
   if (p.includes('quantum')) {
     return `<h4 style="margin:0 0 8px;color:#4a74c7">Topic: Quantum Computing</h4>
     <p><strong>Subtopic:</strong> Beginner explanation</p>
-    <p>Quantum computers use <strong>qubits</strong>. Unlike normal bits (0 or 1), qubits can represent multiple probabilities simultaneously, enabling faster exploration for specific hard problems.</p>
-    <ul><li>Strong use-cases: optimization, materials simulation, cryptography research.</li><li>Not yet a full replacement for classical computers in everyday tasks.</li></ul>`;
+    <p>Quantum computers use <strong>qubits</strong>. Unlike normal bits (0 or 1), qubits can represent probabilities in multiple states, which helps with specific hard computations.</p>
+    <ul><li><strong>Useful for:</strong> optimization, simulation, and cryptography research.</li><li><strong>Not yet:</strong> a replacement for normal computers in all daily tasks.</li></ul>`;
   }
   if (p.includes('productivity') || p.includes('plan')) {
     return `<h4 style="margin:0 0 8px;color:#4a74c7">Topic: Productivity Plan</h4>
-    <p><strong>Subtopic:</strong> Practical routine</p>
+    <p><strong>Subtopic:</strong> Actionable routine</p>
     <ol>
-      <li>Set 3 priority outcomes each morning.</li>
-      <li>Use two 60–90 minute focus blocks without notifications.</li>
-      <li>Batch messages twice per day.</li>
-      <li>Review your progress in 10 minutes before sleep.</li>
+      <li>Set your top 3 outcomes each morning.</li>
+      <li>Do two deep-work blocks (60–90 min each).</li>
+      <li>Batch email/chat checks into fixed windows.</li>
+      <li>Review wins + tomorrow plan in 10 minutes.</li>
     </ol>`;
   }
   return `<h4 style="margin:0 0 8px;color:#4a74c7">Topic: ${getTopic(prompt)}</h4>
   <p><strong>Subtopic:</strong> Direct guidance</p>
-  <p>Here’s a practical answer: break the problem into steps, choose the simplest reliable method, execute, then measure and refine.</p>`;
+  <p>I can help with that. Start by clarifying goal, constraints, and timeline. Then choose the simplest reliable approach and measure progress weekly.</p>`;
 }
 
 async function buildAnswer(prompt) {
@@ -212,7 +221,7 @@ async function buildAnswer(prompt) {
     return `<h4 style="margin:0 0 8px;color:#4a74c7">Topic: ${wiki.title}</h4>
     <p><strong>Subtopic:</strong> Verified reference summary</p>
     <p>${wiki.extract}</p>
-    ${wiki.source ? `<p><small>Source: <a href="${wiki.source}" target="_blank">Wikipedia</a></small></p>` : ''}`;
+    ${wiki.source ? `<p><small>Source: <a href="${wiki.source}" target="_blank" rel="noreferrer">Wikipedia</a></small></p>` : ''}`;
   }
   return localAnswer(prompt);
 }
@@ -228,7 +237,7 @@ async function streamAIResponse(prompt) {
 
   const typing = typingNode();
   const full = await buildAnswer(prompt);
-  await new Promise((r) => setTimeout(r, 400));
+  await new Promise((r) => setTimeout(r, 350));
   typing.remove();
 
   const ai = { id: crypto.randomUUID(), role: 'ai', content: '' };
@@ -236,10 +245,10 @@ async function streamAIResponse(prompt) {
   renderMessage(ai);
 
   const container = chatFeed.lastElementChild.querySelector('div');
-  for (let i = 1; i <= full.length; i += 9) {
+  for (let i = 1; i <= full.length; i += 10) {
     ai.content = full.slice(0, i);
     container.innerHTML = ai.content;
-    await new Promise((r) => setTimeout(r, 7));
+    await new Promise((r) => setTimeout(r, 6));
   }
   ai.content = full;
 
