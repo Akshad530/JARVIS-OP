@@ -29,8 +29,8 @@ function activate(screenName) {
 }
 
 function goAuthStep(step) {
-  authStep = Math.max(0, Math.min(2, step));
-  authSlider.style.transform = `translateX(-${authStep * (100 / 3)}%)`;
+  authStep = Math.max(0, Math.min(1, step));
+  authSlider.style.transform = `translateX(-${authStep * (100 / 2)}%)`;
   dots.forEach((dot, i) => dot.classList.toggle('on', i === authStep));
 }
 
@@ -38,14 +38,10 @@ const splashNextBtn = document.getElementById('splashNextBtn');
 if (splashNextBtn) splashNextBtn.addEventListener('click', () => activate('auth'));
 
 // Auth flow
-const signInWelcome = document.getElementById('signInWelcome');
-const signUpWelcome = document.getElementById('signUpWelcome');
 const goLoginLink = document.getElementById('goLoginLink');
 const goSignupLink = document.getElementById('goSignupLink');
 
-signInWelcome?.addEventListener('click', () => goAuthStep(2));
-signUpWelcome?.addEventListener('click', () => goAuthStep(1));
-goLoginLink?.addEventListener('click', () => goAuthStep(2));
+goLoginLink?.addEventListener('click', () => goAuthStep(0));
 goSignupLink?.addEventListener('click', () => goAuthStep(1));
 
 document.getElementById('createForm').addEventListener('submit', (e) => {

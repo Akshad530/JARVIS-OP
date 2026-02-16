@@ -174,3 +174,39 @@ input:focus, textarea:focus { border-color: #8ac7ff !important; box-shadow: 0 0 
 .splash-mockup { animation: cardIn .6s ease both; }
 .auth-frame { animation: cardIn .6s ease both; }
 @keyframes cardIn { from { opacity:0; transform: translateY(12px) scale(.98);} to {opacity:1; transform: translateY(0) scale(1);} }
+
+/* ===== Pink auth override (latest reference) ===== */
+.auth { justify-content: center; background: radial-gradient(120% 120% at 0% 100%, #ffe0ef 0 35%, transparent 36%), #ffeef7; }
+.auth-frame.pink-auth { width: min(94vw, 360px); border-radius: 30px; box-shadow: 0 24px 48px #c970a14a; border: 1px solid #f0d5e3; }
+.auth-frame.pink-auth .auth-slider { width: 200%; }
+.auth-frame.pink-auth .auth-step { min-height: 700px; }
+.pink-step { background: #fff; border-radius: 30px; overflow: hidden; position: relative; }
+.pink-step::before {
+  content: '';
+  display: block;
+  height: 100px;
+  background:
+    radial-gradient(80px 80px at 90% 0%, #ff77c9 0 50%, transparent 51%),
+    radial-gradient(70px 70px at 10% 0%, #ffc2e5 0 45%, transparent 46%),
+    linear-gradient(180deg, #fff, #fff0f8);
+}
+.pink-title { color: #292a34; font-size: 40px; margin-top: -10px; }
+.pink-step .auth-form { padding-top: 10px; }
+.pink-step .auth-form label { color: #8b7387; }
+.pink-step .auth-form input[type='text'],
+.pink-step .auth-form input[type='email'],
+.pink-step .auth-form input[type='password'] { border-color: #f2d3e3; background: #fff7fc; }
+.pink-btn { background: linear-gradient(90deg, #ff3fa9, #ff66bb); box-shadow: 0 10px 20px #ff4fb052; border-radius: 999px; }
+.social-line { text-align: center; font-size: 12px; color: #9b8497; margin-top: 4px; }
+.auth-icons { display: flex; justify-content: center; gap: 12px; margin: 8px 0 4px; }
+.auth-icons button { width: 28px; height: 28px; border-radius: 50%; border: 1px solid #efd3e2; background: #fff; color: #5e5763; font-weight: 700; }
+.auth-frame.pink-auth .dots { background: #ffeef7; }
+.auth-frame.pink-auth .dots span { background: #f7b8da; }
+.auth-frame.pink-auth .dots .on { background: #ff4bac; }
+
+/* motion */
+.splash-mockup { animation: cardIn .7s ease both, drift 5s ease-in-out infinite; }
+.auth-frame.pink-auth { animation: cardIn .6s ease both; }
+.pink-step::before { animation: shimmer 6s ease-in-out infinite; }
+@keyframes drift { 0%,100%{ transform: translateY(0)} 50%{ transform: translateY(-4px)} }
+@keyframes shimmer { 0%,100%{ filter:saturate(1)} 50%{ filter:saturate(1.15)} }

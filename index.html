@@ -48,42 +48,36 @@
       </section>
 
       <section id="authCarousel" class="screen auth hidden">
-        <div class="auth-frame">
+        <div class="auth-frame pink-auth">
           <div class="auth-slider" id="authSlider">
-            <article class="auth-step welcome-step">
-              <div class="shape-layer"></div>
-              <div class="welcome-content">
-                <h3>Welcome Back!</h3>
-                <p>Enter details to get your personal account</p>
-                <button id="signInWelcome" class="welcome-btn primary">Sign in →</button>
-                <button id="signUpWelcome" class="welcome-btn secondary">Sign up →</button>
-              </div>
+            <article class="auth-step form-step signin-step pink-step">
+              <div class="form-top pink-title">Sign In</div>
+              <form class="auth-form" id="loginForm">
+                <label>Email<input id="loginEmail" type="email" placeholder="Enter Email" required /></label>
+                <label>Password<input id="loginPass" type="password" placeholder="Enter Password" required /></label>
+                <div class="rowline"><label class="checkline"><input type="checkbox" />Remember me</label><a href="#">Forgot?</a></div>
+                <button type="submit" class="primary-btn pink-btn">Sign in</button>
+              </form>
+              <div class="social-line">or sign in with</div>
+              <div class="auth-icons"><button>G</button><button>f</button><button></button></div>
+              <div class="form-footer">Create account? <button type="button" id="goSignupLink">Sign up</button></div>
             </article>
 
-            <article class="auth-step form-step signup-step">
-              <div class="form-top">Get Started</div>
+            <article class="auth-step form-step signup-step pink-step">
+              <div class="form-top pink-title">Create Account</div>
               <form class="auth-form" id="createForm">
                 <label>Full Name<input id="nameInput" type="text" placeholder="Enter Full Name" required /></label>
                 <label>Email<input id="emailInput" type="email" placeholder="Enter Email" required /></label>
                 <label>Password<input id="passInput" type="password" placeholder="Enter Password" minlength="6" required /></label>
-                <label class="checkline"><input type="checkbox" required />I agree to the processing of personal data</label>
-                <button type="submit" class="primary-btn">Sign up →</button>
+                <label class="checkline"><input type="checkbox" required />I agree to terms and privacy</label>
+                <button type="submit" class="primary-btn pink-btn">Create account</button>
               </form>
-              <div class="form-footer">Already have an account? <button type="button" id="goLoginLink">Sign in</button></div>
-            </article>
-
-            <article class="auth-step form-step signin-step">
-              <div class="form-top">Welcome Back</div>
-              <form class="auth-form" id="loginForm">
-                <label>Email<input id="loginEmail" type="email" placeholder="Enter Email" required /></label>
-                <label>Password<input id="loginPass" type="password" placeholder="Enter Password" required /></label>
-                <div class="rowline"><label class="checkline"><input type="checkbox" />Remember me</label><a href="#">Forgot Password?</a></div>
-                <button type="submit" class="primary-btn">Sign in →</button>
-              </form>
-              <div class="form-footer">Don't have an account? <button type="button" id="goSignupLink">Sign up</button></div>
+              <div class="social-line">or sign up with</div>
+              <div class="auth-icons"><button>G</button><button>f</button><button></button></div>
+              <div class="form-footer">Already have account? <button type="button" id="goLoginLink">Sign in</button></div>
             </article>
           </div>
-          <div class="dots"><span class="on"></span><span></span><span></span></div>
+          <div class="dots"><span class="on"></span><span></span></div>
         </div>
       </section>
 
