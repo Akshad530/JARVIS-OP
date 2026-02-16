@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>JARVIS - Premium Mobile AI Assistant</title>
+    <title>JARVIS - Mobile AI Assistant</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
@@ -12,13 +12,11 @@
   <body>
     <div class="app-shell" id="appShell">
       <div class="grain"></div>
+
       <aside class="sidebar" id="sidebar">
         <div class="sidebar-head">
-          <div class="brand-mini">
-            <div class="logo-orb small"></div>
-            <span>JARVIS</span>
-          </div>
-          <button class="icon-btn" id="closeSidebar" aria-label="Close menu">✕</button>
+          <div class="brand-mini"><div class="logo-orb small"></div><span>JARVIS</span></div>
+          <button class="icon-btn" id="closeSidebar" aria-label="Close">✕</button>
         </div>
         <button class="new-chat" id="newChatBtn">+ New chat</button>
         <input id="searchChat" class="search-chat" placeholder="Search chats" />
@@ -32,9 +30,20 @@
       </aside>
 
       <section id="splashScreen" class="screen splash active">
-        <div class="splash-card">
-          <div class="logo-orb"></div>
-          <h1>JARVIS</h1>
+        <div class="splash-track">
+          <article class="s-card card-1">
+            <div class="waves"></div>
+            <h3>Welcome!</h3>
+            <p>Smart help in seconds.</p>
+          </article>
+          <article class="s-card card-2">
+            <h4>Hi, Louien</h4>
+            <div class="mini-grid"><span></span><span></span><span></span><span></span></div>
+          </article>
+          <article class="s-card card-3">
+            <div class="burst"></div>
+            <button>▶</button>
+          </article>
         </div>
       </section>
 
@@ -47,7 +56,10 @@
             <label>Name<input required id="nameInput" placeholder="Jason Miller" /></label>
             <label>Email<input required type="email" placeholder="giga@example.com" /></label>
             <label>Password<input required type="password" placeholder="••••••••" minlength="6" /></label>
-            <button class="signin-btn" type="submit">→</button>
+            <div class="auth-bottom">
+              <strong>Sign in</strong>
+              <button class="signin-btn" type="submit">→</button>
+            </div>
           </form>
           <div class="auth-links"><span>Sign up</span><span>Forgot Password</span></div>
         </div>
@@ -55,7 +67,10 @@
 
       <section id="landingScreen" class="screen landing hidden">
         <header class="top-nav">
-          <div class="brand">ActuallyUseful</div>
+          <div class="brand-wrap">
+            <div class="logo-orb small"></div>
+            <div class="brand">JARVIS</div>
+          </div>
           <button class="menu-btn" id="openSidebar">☰</button>
         </header>
         <main>
@@ -65,32 +80,36 @@
             <button id="needThis" class="btn primary">I Need This</button>
             <button class="btn secondary">Show Me How</button>
           </div>
-          <div class="cards-row">
-            <article><h3>Summarize</h3><p>Condense long docs into key insights.</p></article>
-            <article><h3>Translate</h3><p>Natural translations with context.</p></article>
-            <article><h3>Create a plan</h3><p>Generate practical action plans fast.</p></article>
-          </div>
         </main>
       </section>
 
       <section id="chatScreen" class="screen chat hidden">
         <header class="chat-top">
           <button class="menu-btn" id="chatMenu">☰</button>
-          <button class="new-chat-top" id="newChatTop">New Chat</button>
+          <h1 class="chat-title">JARVIS</h1>
+          <button class="new-chat-top" id="newChatTop">New</button>
         </header>
+
         <div id="chatEmpty" class="chat-empty">
           <div class="logo-orb pulse"></div>
-          <h2 id="greetName">Good Afternoon</h2>
-          <p>How can I help you today?</p>
-          <div class="suggestions">
-            <button data-prompt="Explain quantum computing simply">Explain a topic simply</button>
-            <button data-prompt="Write a professional project update email">Write something for me</button>
-            <button data-prompt="Create a 30-day workout and nutrition plan">Solve a problem</button>
+          <h2 id="greetName">Good Afternoon, Jason.</h2>
+          <p>What’s on your mind?</p>
+          <form id="starterForm" class="starter-box">
+            <textarea id="starterInput" placeholder="Ask me anything or begin typing..."></textarea>
+            <div class="starter-actions">
+              <button type="button" class="mic">🎙</button>
+              <button type="submit" class="send" id="starterSend">➤</button>
+            </div>
+          </form>
+          <div class="suggestions row">
+            <button data-prompt="Write a poem about nature">Write a poem about nature</button>
+            <button data-prompt="Summarize this article">Summarize this article</button>
+            <button data-prompt="Plan my week">Plan my week</button>
+            <button data-prompt="Explain quantum computing">Explain quantum computing</button>
           </div>
         </div>
 
         <div id="chatFeed" class="chat-feed"></div>
-
         <div id="toast" class="toast">Copied to clipboard</div>
 
         <form id="chatForm" class="chat-input-wrap">
@@ -98,6 +117,10 @@
           <button type="button" class="mic">🎤</button>
           <button type="submit" id="sendBtn" class="send" disabled>➤</button>
         </form>
+
+        <footer class="tabbar">
+          <button class="active">⌂</button><button>◌</button><button>◷</button><button>◯</button>
+        </footer>
       </section>
     </div>
 
