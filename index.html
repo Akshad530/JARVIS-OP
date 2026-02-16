@@ -15,24 +15,40 @@
 
       <aside class="sidebar" id="sidebar">
         <div class="side-head">
-          <div class="brand-row"><div class="jarvis-logo tiny"></div><strong>JARVIS</strong></div>
+          <div class="brand-stack">
+            <div class="brand-row"><div class="jarvis-logo tiny"></div><strong>JARVIS</strong></div>
+            <small>Assistant</small>
+          </div>
           <button class="icon-btn" id="closeSidebar" aria-label="Close sidebar">✕</button>
         </div>
-        <button class="new-chat-btn" id="newChatBtn">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-          New Chat
-        </button>
+
         <label class="search-wrap">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4z"/></svg>
-          <input id="searchChat" placeholder="Search conversations" />
+          <input id="searchChat" placeholder="Discover" />
         </label>
+
+        <h5 class="side-section">MENU</h5>
         <div class="side-nav">
           <button data-route="landing"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
-          <button data-route="chat"><svg viewBox="0 0 24 24"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4v-4H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/></svg>Discover</button>
-          <button data-route="chat"><svg viewBox="0 0 24 24"><path d="M12 3l2.2 4.5L19 9l-3.5 3.4.8 4.8-4.3-2.3-4.3 2.3.8-4.8L5 9l4.8-1.5z"/></svg>Labs</button>
+          <button data-route="chat"><svg viewBox="0 0 24 24"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4v-4H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/></svg>Chat</button>
+          <button data-route="chat"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8"/></svg>Articles</button>
+          <button data-route="chat"><svg viewBox="0 0 24 24"><path d="M6 4h12a1 1 0 0 1 1 1v14l-7-3-7 3V5a1 1 0 0 1 1-1z"/></svg>Saved</button>
+          <button data-route="chat"><svg viewBox="0 0 24 24"><path d="M4 7h16M6 7v10h12V7M9 11h6"/></svg>Payment</button>
         </div>
-        <h4>Saved chats</h4>
-        <div id="conversationList" class="conversation-list"></div>
+
+        <h5 class="side-section">SAVED CHATS</h5>
+        <div class="saved-card">
+          <div id="conversationList" class="conversation-list"></div>
+          <button class="new-chat-btn" id="newChatBtn">
+            Chats
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg>
+          </button>
+        </div>
+
+        <button class="logout-btn" data-route="landing">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          Log out
+        </button>
       </aside>
 
       <section id="splashScreen" class="screen splash active">

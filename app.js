@@ -65,7 +65,7 @@ document.getElementById('openSidebar').addEventListener('click', () => sidebar.c
 document.getElementById('chatMenu').addEventListener('click', () => sidebar.classList.add('open'));
 document.getElementById('closeSidebar').addEventListener('click', () => sidebar.classList.remove('open'));
 
-[...document.querySelectorAll('.side-nav button')].forEach((btn) => {
+[...document.querySelectorAll('.sidebar [data-route]')].forEach((btn) => {
   btn.addEventListener('click', () => {
     const route = btn.dataset.route;
     if (screens[route]) activate(route);
@@ -106,19 +106,30 @@ function createConversation(topic) {
 function renderConversationList() {
   const term = document.getElementById('searchChat').value.toLowerCase().trim();
   conversationList.innerHTML = '';
-  state.conversations
+
+  const list = state.conversations.length
+    ? state.conversations
+    : [
+        { id: 'sample-1', topic: 'Productivity Plan', messages: [] },
+        { id: 'sample-2', topic: 'Travel Itinerary', messages: [] },
+        { id: 'sample-3', topic: 'Startup Pitch', messages: [] }
+      ];
+
+  list
     .filter((c) => c.topic.toLowerCase().includes(term))
-    .forEach((c) => {
-      const btn = document.createElement('button');
-      btn.className = 'conversation-item';
-      btn.textContent = c.topic;
-      btn.onclick = () => {
-        state.currentConversationId = c.id;
-        renderConversation(c);
+    .forEach((c, i) => {
+      const row = document.createElement('button');
+      row.className = 'conversation-item';
+      row.innerHTML = `<span class="avatar-mini">${c.topic.charAt(0).toUpperCase()}</span><span class="topic-text">${c.topic}</span><span class="badge-mini">${i + 1}</span>`;
+      row.onclick = () => {
+        const found = state.conversations.find((x) => x.id === c.id);
+        if (!found) return;
+        state.currentConversationId = found.id;
+        renderConversation(found);
         activate('chat');
         sidebar.classList.remove('open');
       };
-      conversationList.append(btn);
+      conversationList.append(row);
     });
 }
 
@@ -304,3 +315,6 @@ document.getElementById('newChatTop').addEventListener('click', () => {
   chatFeed.innerHTML = '';
   chatEmpty.classList.remove('hidden');
 });
+
+
+renderConversationList();
