@@ -16,44 +16,9 @@ const chatEmpty = document.getElementById('chatEmpty');
 const chatInput = document.getElementById('chatInput');
 const sendBtn = document.getElementById('sendBtn');
 const toast = document.getElementById('toast');
-const aiProviderEl = document.getElementById('aiProvider');
-const aiApiKeyEl = document.getElementById('aiApiKey');
-const aiModelEl = document.getElementById('aiModel');
 
 let authStep = 0;
 
-
-const aiConfig = {
-  provider: localStorage.getItem('jarvis_provider') || 'openai',
-  apiKey: localStorage.getItem('jarvis_api_key') || '',
-  model: localStorage.getItem('jarvis_model') || 'gpt-4o-mini'
-};
-
-function syncAiConfigUI() {
-  if (aiProviderEl) aiProviderEl.value = aiConfig.provider;
-  if (aiApiKeyEl) aiApiKeyEl.value = aiConfig.apiKey;
-  if (aiModelEl) aiModelEl.value = aiConfig.model;
-}
-
-function saveAiConfig() {
-  aiConfig.provider = aiProviderEl?.value || 'openai';
-  aiConfig.apiKey = aiApiKeyEl?.value.trim() || '';
-  aiConfig.model = aiModelEl?.value.trim() || (aiConfig.provider === 'gemini' ? 'gemini-1.5-flash' : 'gpt-4o-mini');
-
-  localStorage.setItem('jarvis_provider', aiConfig.provider);
-  localStorage.setItem('jarvis_api_key', aiConfig.apiKey);
-  localStorage.setItem('jarvis_model', aiConfig.model);
-
-  toast.textContent = 'AI config saved';
-  toast.classList.add('show');
-  setTimeout(() => {
-    toast.classList.remove('show');
-    toast.textContent = 'Copied to clipboard';
-  }, 1200);
-}
-
-syncAiConfigUI();
-document.getElementById('saveAiConfig')?.addEventListener('click', saveAiConfig);
 
 
 function activate(screenName) {
@@ -266,58 +231,7 @@ function localAnswer(prompt) {
   <p>I can help with that. Start by clarifying goal, constraints, and timeline. Then choose the simplest reliable approach and measure progress weekly.</p>`;
 }
 
-async function callExternalAI(prompt) {
-  if (!aiConfig.apiKey) return null;
-
-  const system = 'You are JARVIS, a professional AI assistant. Give clear, accurate, structured answers with concise headings and bullet points when useful.';
-
-  try {
-    if (aiConfig.provider === 'gemini') {
-      const model = aiConfig.model || 'gemini-1.5-flash';
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(aiConfig.apiKey)}`;
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ role: 'user', parts: [{ text: `${system}\n\nUser question: ${prompt}` }] }]
-        })
-      });
-      if (!res.ok) return null;
-      const data = await res.json();
-      const text = data?.candidates?.[0]?.content?.parts?.map((p) => p.text).join('\n').trim();
-      return text || null;
-    }
-
-    const model = aiConfig.model || 'gpt-4o-mini';
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${aiConfig.apiKey}`
-      },
-      body: JSON.stringify({
-        model,
-        temperature: 0.3,
-        messages: [
-          { role: 'system', content: system },
-          { role: 'user', content: prompt }
-        ]
-      })
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data?.choices?.[0]?.message?.content?.trim() || null;
-  } catch {
-    return null;
-  }
-}
-
 async function buildAnswer(prompt) {
-  const live = await callExternalAI(prompt);
-  if (live) {
-    return `<h4 style="margin:0 0 8px;color:#4a74c7">Topic: AI Response</h4><p>${live.replace(/\n/g, '<br>')}</p>`;
-  }
-
   const wiki = await fetchWikipediaSummary(prompt);
   if (wiki) {
     return `<h4 style="margin:0 0 8px;color:#4a74c7">Topic: ${wiki.title}</h4>
