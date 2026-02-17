@@ -36,10 +36,25 @@ const chatEmpty = document.getElementById('chatEmpty');
 const chatInput = document.getElementById('chatInput');
 const sendBtn = document.getElementById('sendBtn');
 const toast = document.getElementById('toast');
+const attachBtn = document.getElementById('attachBtn');
+const filePicker = document.getElementById('filePicker');
+const micBtn = document.getElementById('micBtn');
 
 let authStep = 0;
+let activeGeneration = null;
 
+function setGeneratingState(isGenerating) {
+  sendBtn.dataset.mode = isGenerating ? 'stop' : 'send';
+  sendBtn.textContent = isGenerating ? '■' : '➤';
+  sendBtn.classList.toggle('stop', isGenerating);
+  sendBtn.disabled = isGenerating ? false : !chatInput.value.trim();
+}
 
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 1200);
+}
 
 function activate(screenName) {
   Object.values(screens).forEach((el) => {
@@ -171,8 +186,7 @@ function renderMessage(msg) {
     actions.innerHTML = '<button data-copy>Copy</button><button data-regen>Regenerate</button><button>👍</button><button>👎</button>';
     actions.querySelector('[data-copy]').onclick = async () => {
       await navigator.clipboard.writeText(card.innerText);
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 1200);
+      showToast('Copied to clipboard');
     };
     actions.querySelector('[data-regen]').onclick = () => regenerate(msg.id);
     card.append(actions);
@@ -330,10 +344,42 @@ function formatPremiumAnswer(prompt, title, rawText, source = '') {
 }
 
 
+function trySolveMath(prompt) {
+  const q = (prompt || '').toLowerCase();
+  const exprMatch = q.match(/(?:solve|calculate|what is|find)\s+([0-9\s+\-*/().%^]+)/i);
+  if (!exprMatch) return null;
+  const expr = exprMatch[1].replace(/\^/g, '**').replace(/[^0-9+\-*/().%*\s]/g, '').trim();
+  if (!expr || expr.length > 80) return null;
+  try {
+    const result = Function(`"use strict"; return (${expr});`)();
+    if (typeof result !== 'number' || !Number.isFinite(result)) return null;
+    return `The evaluated result for ${expr.replace(/\*\*/g, '^')} is ${result}. This is obtained by applying standard arithmetic order of operations (parentheses, exponents, multiplication/division, then addition/subtraction).`;
+  } catch {
+    return null;
+  }
+}
+
+function buildEssayAnswer(prompt) {
+  const match = prompt.match(/essay\s+(?:on|about)?\s*(.*)/i);
+  if (!match) return null;
+  const topic = (match[1] || 'the given topic').trim().replace(/[?.!]+$/, '') || 'the given topic';
+  return `An essay on ${topic} should begin with a clear thesis that introduces why the topic matters in practical and human terms. The introduction should set context, define scope, and present the central argument so the reader understands the direction immediately. In the body, explain the idea with examples, evidence, and balanced analysis. A strong paragraph structure—claim, explanation, example, and reflection—makes the essay persuasive and easy to follow. You can discuss benefits, limitations, and real-world impact to make the writing credible. In conclusion, restate the thesis in a sharper way, synthesize the key insights, and end with a forward-looking statement or call to action. This gives the essay closure while leaving the reader with a meaningful takeaway.`;
+}
+
 async function buildAnswer(prompt) {
   if (isGreetingPrompt(prompt)) {
     const g = greetingAnswer();
     return formatPremiumAnswer(prompt, g.title, g.text);
+  }
+
+  const mathAnswer = trySolveMath(prompt);
+  if (mathAnswer) {
+    return formatPremiumAnswer(prompt, 'Mathematics', mathAnswer);
+  }
+
+  const essayAnswer = buildEssayAnswer(prompt);
+  if (essayAnswer) {
+    return formatPremiumAnswer(prompt, 'Essay Draft', essayAnswer);
   }
 
   const fact = await fetchDuckDuckGoAnswer(prompt);
@@ -358,29 +404,51 @@ async function streamAIResponse(prompt) {
   renderMessage(user);
   chatEmpty.classList.add('hidden');
 
+  const generation = { stopped: false };
+  activeGeneration = generation;
+  setGeneratingState(true);
+
   const typing = typingNode();
-  const full = await buildAnswer(prompt);
-  await new Promise((r) => setTimeout(r, 180));
-  typing.remove();
+  try {
+    const full = await buildAnswer(prompt);
+    if (generation.stopped) {
+      typing.remove();
+      return;
+    }
 
-  const ai = { id: crypto.randomUUID(), role: 'ai', content: '' };
-  convo.messages.push(ai);
-  renderMessage(ai);
+    await new Promise((r) => setTimeout(r, 130));
+    typing.remove();
 
-  const container = chatFeed.lastElementChild.querySelector('div');
-  for (let i = 1; i <= full.length; i += 16) {
-    ai.content = full.slice(0, i);
-    container.innerHTML = ai.content;
-    await new Promise((r) => setTimeout(r, 4));
+    const ai = { id: crypto.randomUUID(), role: 'ai', content: '' };
+    convo.messages.push(ai);
+    renderMessage(ai);
+
+    const container = chatFeed.lastElementChild.querySelector('div');
+    for (let i = 1; i <= full.length; i += 22) {
+      if (generation.stopped) break;
+      ai.content = full.slice(0, i);
+      container.innerHTML = ai.content;
+      await new Promise((r) => setTimeout(r, 3));
+    }
+
+    if (!generation.stopped) {
+      ai.content = full;
+      container.innerHTML = full;
+      if (convo.topic === 'General Chat') {
+        convo.topic = getTopic(prompt);
+        renderConversationList();
+      }
+      saveState();
+    } else {
+      container.insertAdjacentHTML('beforeend', '<p class="ai-source"><small>Response stopped.</small></p>');
+      saveState();
+    }
+  } finally {
+    if (activeGeneration === generation) activeGeneration = null;
+    setGeneratingState(false);
   }
-  ai.content = full;
-
-  if (convo.topic === 'General Chat') {
-    convo.topic = getTopic(prompt);
-    renderConversationList();
-  }
-  saveState();
 }
+
 
 async function regenerate(id) {
   const c = currentConversation();
@@ -394,7 +462,37 @@ async function regenerate(id) {
   await streamAIResponse(prompt);
 }
 
+attachBtn?.addEventListener('click', () => filePicker?.click());
+
+filePicker?.addEventListener('change', () => {
+  const count = filePicker.files?.length || 0;
+  if (!count) return;
+  showToast(`${count} file${count > 1 ? 's' : ''} selected`);
+});
+
+micBtn?.addEventListener('click', () => {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    showToast('Voice input is not supported on this device');
+    return;
+  }
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'en-US';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+  recognition.onresult = (event) => {
+    const transcript = event.results?.[0]?.[0]?.transcript || '';
+    chatInput.value = transcript.trim();
+    const has = !!chatInput.value.trim();
+    sendBtn.disabled = !has;
+    sendBtn.classList.toggle('active', has);
+  };
+  recognition.onerror = () => showToast('Could not capture voice, try again');
+  recognition.start();
+});
+
 chatInput.addEventListener('input', () => {
+  if (sendBtn.dataset.mode === 'stop') return;
   const has = !!chatInput.value.trim();
   sendBtn.disabled = !has;
   sendBtn.classList.toggle('active', has);
@@ -402,6 +500,13 @@ chatInput.addEventListener('input', () => {
 
 document.getElementById('chatForm').addEventListener('submit', async (e) => {
   e.preventDefault();
+
+  if (sendBtn.dataset.mode === 'stop' && activeGeneration) {
+    activeGeneration.stopped = true;
+    setGeneratingState(false);
+    return;
+  }
+
   const q = chatInput.value.trim();
   if (!q) return;
   chatInput.value = '';
@@ -436,3 +541,4 @@ renderConversationList();
 if (state.currentConversationId) {
   renderConversation(currentConversation());
 }
+setGeneratingState(false);

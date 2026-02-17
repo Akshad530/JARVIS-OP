@@ -157,8 +157,14 @@
         <div id="toast" class="toast">Copied to clipboard</div>
 
         <form id="chatForm" class="chat-input">
+          <button id="attachBtn" type="button" class="icon-btn plus-btn" aria-label="Attach file">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
           <input id="chatInput" placeholder="Ask anything…" autocomplete="off" />
-          <button type="button" class="icon-btn mic">🎤</button>
+          <input id="filePicker" type="file" accept="image/*,.pdf,.txt" multiple hidden />
+          <button id="micBtn" type="button" class="icon-btn mic" aria-label="Use voice input">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 1 3 3v5a3 3 0 1 1-6 0V6a3 3 0 0 1 3-3zm-6 8a1 1 0 0 1 2 0 4 4 0 0 0 8 0 1 1 0 1 1 2 0 6 6 0 0 1-5 5.91V20h2a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2h2v-3.09A6 6 0 0 1 6 11z"/></svg>
+          </button>
           <button id="sendBtn" type="submit" class="send-btn" disabled>➤</button>
         </form>
       </section>
