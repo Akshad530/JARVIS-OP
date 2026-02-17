@@ -385,8 +385,8 @@ input:focus, textarea:focus { border-color: #8ac7ff !important; box-shadow: 0 0 
   margin-bottom: 8px;
 }
 .ai-subtopic { font-weight: 700; color: #3a5c86; }
-.ai-points { margin: 8px 0 8px 18px; padding: 0; }
-.ai-points li { margin-bottom: 6px; }
+.ai-section { margin: 8px 0; font-size: 14px; line-height: 1.55; }
+.ai-section-title { font-weight: 700; color: #2f5b8c; }
 .ai-source a { color: #4d7fbb; }
 
 /* Replace text-heavy signal panel with visual premium design */

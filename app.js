@@ -211,6 +211,7 @@ async function fetchWikipediaSummary(prompt) {
 
 async function fetchDuckDuckGoAnswer(prompt) {
   try {
+    if (!prompt || prompt.trim().length < 6) return null;
     const q = encodeURIComponent(prompt.slice(0, 180));
     const res = await fetch(`https://api.duckduckgo.com/?q=${q}&format=json&no_html=1&skip_disambig=1`);
     if (!res.ok) return null;
@@ -278,22 +279,40 @@ function localAnswer(prompt) {
 }
 
 
+function isGreetingPrompt(prompt) {
+  const q = (prompt || '').trim().toLowerCase();
+  return /^(hi|hii|hello|hey|yo|good morning|good afternoon|good evening)$/.test(q);
+}
+
+function greetingAnswer() {
+  return {
+    title: 'Greeting',
+    text: "Hello! I'm JARVIS. I can help with explanations, summaries, planning, writing, and research. Ask me any question and I will give a detailed, correct answer."
+  };
+}
+
 function formatPremiumAnswer(title, rawText, source = '') {
   const text = (rawText || '').replace(/\s+/g, ' ').trim();
   const sentences = text.split(/(?<=[.!?])\s+/).filter(Boolean);
-  const points = (sentences.length ? sentences : [text]).slice(0, 5);
+  const parts = (sentences.length ? sentences : [text]).slice(0, 5);
+  const sectionNames = ['Overview', 'Key Insight', 'Important Context', 'Practical Guidance', 'Next Step'];
 
-  const bullets = points
-    .map((line) => `<li><strong>Point:</strong> ${line}</li>`)
+  const sections = parts
+    .map((line, idx) => `<p class="ai-section"><span class="ai-section-title">${sectionNames[idx] || `Detail ${idx + 1}`}:</span> ${line}</p>`)
     .join('');
 
   return `<div class="ai-topic">${title}</div>
-  <p><span class="ai-subtopic">Subtopic:</span> Practical explanation</p>
-  <ul class="ai-points">${bullets}</ul>
+  <p><span class="ai-subtopic">Subtopic:</span> Professional explanation</p>
+  ${sections}
   ${source ? `<p class="ai-source"><small>Source: <a href="${source}" target="_blank" rel="noreferrer">Reference</a></small></p>` : ''}`;
 }
 
 async function buildAnswer(prompt) {
+  if (isGreetingPrompt(prompt)) {
+    const g = greetingAnswer();
+    return formatPremiumAnswer(g.title, g.text);
+  }
+
   const fact = await fetchDuckDuckGoAnswer(prompt);
   if (fact) {
     return formatPremiumAnswer(fact.title || getTopic(prompt), fact.text, fact.source || '');
