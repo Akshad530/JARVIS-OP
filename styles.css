@@ -300,6 +300,7 @@ input:focus, textarea:focus { border-color: #8ac7ff !important; box-shadow: 0 0 
     padding: 11px 14px;
   }
   .idea-card { max-width: 100%; }
+  .signal-panel { max-width: 100%; }
   .landing-prompt input { min-width: 0; }
 
   .chat-empty h2 {
@@ -332,4 +333,39 @@ input:focus, textarea:focus { border-color: #8ac7ff !important; box-shadow: 0 0 
 @media (max-width: 360px) {
   .landing h2 { font-size: 34px; }
   .suggest-grid { grid-template-columns: 1fr; }
+}
+
+
+/* Landing unique premium block */
+.signal-panel {
+  position: relative;
+  margin: 12px auto 0;
+  max-width: 366px;
+  border-radius: 18px;
+  padding: 12px;
+  border: 1px solid #dbe7f7;
+  background: linear-gradient(145deg, #ffffffdd, #eef6ffcc);
+  box-shadow: 0 14px 30px #6f8fc229;
+  text-align: left;
+  overflow: hidden;
+}
+.signal-glow {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  right: -35px;
+  top: -40px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #7ec0ff73 0, transparent 65%);
+}
+.signal-panel h4 { margin: 0; font-size: 16px; color: #1f3556; }
+.signal-panel p { margin: 6px 0 10px; font-size: 13px; font-family: inherit; opacity: .86; }
+.signal-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.signal-tags span {
+  border: 1px solid #d6e6fb;
+  background: #fff;
+  border-radius: 999px;
+  padding: 6px 9px;
+  font-size: 11px;
+  color: #35527a;
 }

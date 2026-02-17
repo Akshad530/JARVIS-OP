@@ -208,6 +208,52 @@ async function fetchWikipediaSummary(prompt) {
   }
 }
 
+
+async function fetchDuckDuckGoAnswer(prompt) {
+  try {
+    const q = encodeURIComponent(prompt.slice(0, 180));
+    const res = await fetch(`https://api.duckduckgo.com/?q=${q}&format=json&no_html=1&skip_disambig=1`);
+    if (!res.ok) return null;
+    const data = await res.json();
+
+    const abstract = (data?.AbstractText || '').trim();
+    const heading = (data?.Heading || '').trim();
+    const source = (data?.AbstractURL || '').trim();
+
+    if (abstract) {
+      return {
+        title: heading || 'Web Fact',
+        text: abstract,
+        source
+      };
+    }
+
+    const related = data?.RelatedTopics || [];
+    for (const item of related) {
+      if (item?.Text) {
+        return {
+          title: heading || 'Web Fact',
+          text: item.Text,
+          source: item.FirstURL || source || ''
+        };
+      }
+      if (Array.isArray(item?.Topics)) {
+        const inner = item.Topics.find((t) => t?.Text);
+        if (inner) {
+          return {
+            title: heading || 'Web Fact',
+            text: inner.Text,
+            source: inner.FirstURL || source || ''
+          };
+        }
+      }
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 function localAnswer(prompt) {
   const p = prompt.toLowerCase();
   if (p.includes('quantum')) {
@@ -232,6 +278,14 @@ function localAnswer(prompt) {
 }
 
 async function buildAnswer(prompt) {
+  const fact = await fetchDuckDuckGoAnswer(prompt);
+  if (fact) {
+    return `<h4 style="margin:0 0 8px;color:#4a74c7">Topic: ${fact.title}</h4>
+    <p><strong>Subtopic:</strong> Web-verified quick answer</p>
+    <p>${fact.text}</p>
+    ${fact.source ? `<p><small>Source: <a href="${fact.source}" target="_blank" rel="noreferrer">Reference link</a></small></p>` : ''}`;
+  }
+
   const wiki = await fetchWikipediaSummary(prompt);
   if (wiki) {
     return `<h4 style="margin:0 0 8px;color:#4a74c7">Topic: ${wiki.title}</h4>
