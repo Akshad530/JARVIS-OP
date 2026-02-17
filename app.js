@@ -101,7 +101,7 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
 // Navigation actions
 document.getElementById('needThis').addEventListener('click', () => activate('chat'));
 document.getElementById('openSidebar').addEventListener('click', () => sidebar.classList.add('open'));
-document.getElementById('chatMenu').addEventListener('click', () => sidebar.classList.add('open'));
+document.getElementById('chatMenu')?.addEventListener('click', () => sidebar.classList.add('open'));
 document.getElementById('closeSidebar').addEventListener('click', () => sidebar.classList.remove('open'));
 
 [...document.querySelectorAll('.sidebar [data-route]')].forEach((btn) => {
@@ -527,7 +527,7 @@ document.getElementById('newChatBtn').addEventListener('click', () => {
   sidebar.classList.remove('open');
 });
 
-document.getElementById('newChatTop').addEventListener('click', () => {
+document.getElementById('newChatTop')?.addEventListener('click', () => {
   state.currentConversationId = null;
   saveState();
   chatFeed.innerHTML = '';
