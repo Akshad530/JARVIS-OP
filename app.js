@@ -6,6 +6,26 @@ const screens = {
 };
 
 const state = { name: 'Jason', conversations: [], currentConversationId: null };
+const STORAGE_KEY = 'jarvis_state_v1';
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object') {
+      state.name = parsed.name || state.name;
+      state.conversations = Array.isArray(parsed.conversations) ? parsed.conversations : [];
+      state.currentConversationId = parsed.currentConversationId || null;
+    }
+  } catch {
+    // ignore invalid cache
+  }
+}
 
 const sidebar = document.getElementById('sidebar');
 const authSlider = document.getElementById('authSlider');
@@ -50,6 +70,7 @@ document.getElementById('createForm').addEventListener('submit', (e) => {
   e.preventDefault();
   state.name = document.getElementById('nameInput').value.trim() || 'Jason';
   document.getElementById('greetName').textContent = `Good Afternoon, ${state.name}.`;
+  saveState();
   activate('landing');
 });
 
@@ -58,6 +79,7 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
   const email = document.getElementById('loginEmail').value.trim();
   state.name = email ? email.split('@')[0] : 'Jason';
   document.getElementById('greetName').textContent = `Good Afternoon, ${state.name}.`;
+  saveState();
   activate('landing');
 });
 
@@ -101,6 +123,7 @@ function createConversation(topic) {
   const c = { id: crypto.randomUUID(), topic, messages: [] };
   state.conversations.unshift(c);
   state.currentConversationId = c.id;
+  saveState();
   renderConversationList();
   return c;
 }
@@ -109,30 +132,30 @@ function renderConversationList() {
   const term = document.getElementById('searchChat').value.toLowerCase().trim();
   conversationList.innerHTML = '';
 
-  const list = state.conversations.length
-    ? state.conversations
-    : [
-        { id: 'sample-1', topic: 'Productivity Plan', messages: [] },
-        { id: 'sample-2', topic: 'Travel Itinerary', messages: [] },
-        { id: 'sample-3', topic: 'Startup Pitch', messages: [] }
-      ];
+  const list = state.conversations.filter((c) => c.topic.toLowerCase().includes(term));
 
-  list
-    .filter((c) => c.topic.toLowerCase().includes(term))
-    .forEach((c, i) => {
-      const row = document.createElement('button');
-      row.className = 'conversation-item';
-      row.innerHTML = `<span class="avatar-mini">${c.topic.charAt(0).toUpperCase()}</span><span class="topic-text">${c.topic}</span><span class="badge-mini">${i + 1}</span>`;
-      row.onclick = () => {
-        const found = state.conversations.find((x) => x.id === c.id);
-        if (!found) return;
-        state.currentConversationId = found.id;
-        renderConversation(found);
-        activate('chat');
-        sidebar.classList.remove('open');
-      };
-      conversationList.append(row);
-    });
+  if (!list.length) {
+    const empty = document.createElement('p');
+    empty.className = 'conversation-empty';
+    empty.textContent = 'No saved chats yet';
+    conversationList.append(empty);
+    return;
+  }
+
+  list.forEach((c, i) => {
+    const row = document.createElement('button');
+    row.className = 'conversation-item';
+    row.innerHTML = `<span class="avatar-mini">${c.topic.charAt(0).toUpperCase()}</span><span class="topic-text">${c.topic}</span><span class="badge-mini">${i + 1}</span>`;
+    row.onclick = () => {
+      const found = state.conversations.find((x) => x.id === c.id);
+      if (!found) return;
+      state.currentConversationId = found.id;
+      renderConversation(found);
+      activate('chat');
+      sidebar.classList.remove('open');
+    };
+    conversationList.append(row);
+  });
 }
 
 document.getElementById('searchChat').addEventListener('input', renderConversationList);
@@ -258,25 +281,14 @@ async function fetchDuckDuckGoAnswer(prompt) {
 function localAnswer(prompt) {
   const p = prompt.toLowerCase();
   if (p.includes('quantum')) {
-    return `<h4 style="margin:0 0 8px;color:#4a74c7">Topic: Quantum Computing</h4>
-    <p><strong>Subtopic:</strong> Beginner explanation</p>
-    <p>Quantum computers use <strong>qubits</strong>. Unlike normal bits (0 or 1), qubits can represent probabilities in multiple states, which helps with specific hard computations.</p>
-    <ul><li><strong>Useful for:</strong> optimization, simulation, and cryptography research.</li><li><strong>Not yet:</strong> a replacement for normal computers in all daily tasks.</li></ul>`;
+    return 'Quantum computing uses qubits, which can represent probabilities instead of only 0 or 1. This allows certain complex calculations to be explored more efficiently than with classical computing methods. Today it is most useful for research in optimization, simulation, and cryptography, while practical large-scale use is still evolving due to hardware and error-correction limits.';
   }
   if (p.includes('productivity') || p.includes('plan')) {
-    return `<h4 style="margin:0 0 8px;color:#4a74c7">Topic: Productivity Plan</h4>
-    <p><strong>Subtopic:</strong> Actionable routine</p>
-    <ol>
-      <li>Set your top 3 outcomes each morning.</li>
-      <li>Do two deep-work blocks (60–90 min each).</li>
-      <li>Batch email/chat checks into fixed windows.</li>
-      <li>Review wins + tomorrow plan in 10 minutes.</li>
-    </ol>`;
+    return 'A strong productivity plan starts with clear priorities, realistic time blocks, and regular review. Define the most important outcomes for the week, schedule focused deep-work sessions, and batch shallow tasks into smaller windows. End each day with a short review so your next day starts with direction and less decision fatigue.';
   }
-  return `<h4 style="margin:0 0 8px;color:#4a74c7">Topic: ${getTopic(prompt)}</h4>
-  <p><strong>Subtopic:</strong> Direct guidance</p>
-  <p>I can help with that. Start by clarifying goal, constraints, and timeline. Then choose the simplest reliable approach and measure progress weekly.</p>`;
+  return 'To answer this well, first define your goal, constraints, and expected outcome. Then choose a simple approach, test it quickly, and improve based on feedback. This gives you reliable progress while reducing confusion and unnecessary complexity.';
 }
+
 
 
 function isGreetingPrompt(prompt) {
@@ -291,39 +303,50 @@ function greetingAnswer() {
   };
 }
 
-function formatPremiumAnswer(title, rawText, source = '') {
+function inferSubtopic(prompt) {
+  const q = (prompt || '').toLowerCase();
+  if (/how|steps|process/.test(q)) return 'How it works';
+  if (/why|reason|cause/.test(q)) return 'Why it matters';
+  if (/difference|vs|compare/.test(q)) return 'Comparison';
+  if (/plan|improve|strategy|tips/.test(q)) return 'Practical strategy';
+  return 'Core explanation';
+}
+
+function formatPremiumAnswer(prompt, title, rawText, source = '') {
   const text = (rawText || '').replace(/\s+/g, ' ').trim();
   const sentences = text.split(/(?<=[.!?])\s+/).filter(Boolean);
-  const parts = (sentences.length ? sentences : [text]).slice(0, 5);
-  const sectionNames = ['Overview', 'Key Insight', 'Important Context', 'Practical Guidance', 'Next Step'];
-
-  const sections = parts
-    .map((line, idx) => `<p class="ai-section"><span class="ai-section-title">${sectionNames[idx] || `Detail ${idx + 1}`}:</span> ${line}</p>`)
-    .join('');
+  const safe = sentences.length ? sentences : [text || 'I could not find enough data for this question right now.'];
+  const overview = safe[0] || '';
+  const depth = safe.slice(1, 4).join(' ');
+  const next = safe.slice(4).join(' ');
+  const subtopic = inferSubtopic(prompt);
 
   return `<div class="ai-topic">${title}</div>
-  <p><span class="ai-subtopic">Subtopic:</span> Professional explanation</p>
-  ${sections}
+  <p class="ai-subtitle"><span class="ai-subtopic">${subtopic}</span></p>
+  <p class="ai-section"><span class="ai-section-title">Topic Summary:</span> ${overview}</p>
+  <p class="ai-section"><span class="ai-section-title">${subtopic}:</span> ${depth || overview}</p>
+  ${next ? `<p class="ai-section"><span class="ai-section-title">Additional Detail:</span> ${next}</p>` : ''}
   ${source ? `<p class="ai-source"><small>Source: <a href="${source}" target="_blank" rel="noreferrer">Reference</a></small></p>` : ''}`;
 }
+
 
 async function buildAnswer(prompt) {
   if (isGreetingPrompt(prompt)) {
     const g = greetingAnswer();
-    return formatPremiumAnswer(g.title, g.text);
+    return formatPremiumAnswer(prompt, g.title, g.text);
   }
 
   const fact = await fetchDuckDuckGoAnswer(prompt);
   if (fact) {
-    return formatPremiumAnswer(fact.title || getTopic(prompt), fact.text, fact.source || '');
+    return formatPremiumAnswer(prompt, fact.title || getTopic(prompt), fact.text, fact.source || '');
   }
 
   const wiki = await fetchWikipediaSummary(prompt);
   if (wiki) {
-    return formatPremiumAnswer(wiki.title || getTopic(prompt), wiki.extract, wiki.source || '');
+    return formatPremiumAnswer(prompt, wiki.title || getTopic(prompt), wiki.extract, wiki.source || '');
   }
 
-  return formatPremiumAnswer(getTopic(prompt), localAnswer(prompt).replace(/<[^>]*>/g, ''));
+  return formatPremiumAnswer(prompt, getTopic(prompt), localAnswer(prompt));
 }
 
 async function streamAIResponse(prompt) {
@@ -337,7 +360,7 @@ async function streamAIResponse(prompt) {
 
   const typing = typingNode();
   const full = await buildAnswer(prompt);
-  await new Promise((r) => setTimeout(r, 350));
+  await new Promise((r) => setTimeout(r, 180));
   typing.remove();
 
   const ai = { id: crypto.randomUUID(), role: 'ai', content: '' };
@@ -345,10 +368,10 @@ async function streamAIResponse(prompt) {
   renderMessage(ai);
 
   const container = chatFeed.lastElementChild.querySelector('div');
-  for (let i = 1; i <= full.length; i += 10) {
+  for (let i = 1; i <= full.length; i += 16) {
     ai.content = full.slice(0, i);
     container.innerHTML = ai.content;
-    await new Promise((r) => setTimeout(r, 6));
+    await new Promise((r) => setTimeout(r, 4));
   }
   ai.content = full;
 
@@ -356,6 +379,7 @@ async function streamAIResponse(prompt) {
     convo.topic = getTopic(prompt);
     renderConversationList();
   }
+  saveState();
 }
 
 async function regenerate(id) {
@@ -365,6 +389,7 @@ async function regenerate(id) {
   if (idx <= 0) return;
   const prompt = c.messages[idx - 1].content;
   c.messages.splice(idx, 1);
+  saveState();
   renderConversation(c);
   await streamAIResponse(prompt);
 }
@@ -391,6 +416,7 @@ document.getElementById('chatForm').addEventListener('submit', async (e) => {
 
 document.getElementById('newChatBtn').addEventListener('click', () => {
   state.currentConversationId = null;
+  saveState();
   chatFeed.innerHTML = '';
   chatEmpty.classList.remove('hidden');
   sidebar.classList.remove('open');
@@ -398,9 +424,15 @@ document.getElementById('newChatBtn').addEventListener('click', () => {
 
 document.getElementById('newChatTop').addEventListener('click', () => {
   state.currentConversationId = null;
+  saveState();
   chatFeed.innerHTML = '';
   chatEmpty.classList.remove('hidden');
 });
 
 
+loadState();
+document.getElementById('greetName').textContent = `Good Afternoon, ${state.name}.`;
 renderConversationList();
+if (state.currentConversationId) {
+  renderConversation(currentConversation());
+}
