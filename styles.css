@@ -369,3 +369,45 @@ input:focus, textarea:focus { border-color: #8ac7ff !important; box-shadow: 0 0 
   font-size: 11px;
   color: #35527a;
 }
+
+/* Premium message cards */
+.msg { max-width: 88%; border-radius: 16px; padding: 12px 13px; }
+.msg.user { background: linear-gradient(125deg, #eaf4ff, #dcecff); border: 1px solid #cfe2f8; }
+.msg.ai { background: linear-gradient(130deg, #ffffff, #eef6ff); border: 1px solid #d9e8fb; }
+.msg div { font-size: 14px; line-height: 1.5; color: #23324a; }
+.ai-topic {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #d9ecff;
+  color: #2b4c75;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.ai-subtopic { font-weight: 700; color: #3a5c86; }
+.ai-points { margin: 8px 0 8px 18px; padding: 0; }
+.ai-points li { margin-bottom: 6px; }
+.ai-source a { color: #4d7fbb; }
+
+/* Replace text-heavy signal panel with visual premium design */
+.signal-panel {
+  min-height: 170px;
+  display: grid;
+  align-content: space-between;
+  background: linear-gradient(145deg, #ffffff, #e8f3ff);
+}
+.signal-orb {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #d9f1ff, #7fc5ff 55%, #5a96df);
+  box-shadow: 0 12px 24px #6ca8e24f;
+}
+.signal-bars { display: flex; align-items: end; gap: 6px; margin-top: 8px; }
+.signal-bars span { width: 8px; border-radius: 8px; background: linear-gradient(180deg,#74bbff,#3f8be8); animation: bounce 1.8s ease-in-out infinite; }
+.signal-bars span:nth-child(1){height:12px}.signal-bars span:nth-child(2){height:18px;animation-delay:.1s}.signal-bars span:nth-child(3){height:26px;animation-delay:.2s}.signal-bars span:nth-child(4){height:16px;animation-delay:.3s}.signal-bars span:nth-child(5){height:22px;animation-delay:.4s}
+.signal-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; }
+.signal-metrics article { border:1px solid #d5e5f8; border-radius:10px; padding:7px; background:#ffffffc7; text-align:center; }
+.signal-metrics strong { display:block; font-size:14px; color:#2b4f79; }
+.signal-metrics small { font-size:10px; color:#6d809a; }
+@keyframes bounce {0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.25)}}

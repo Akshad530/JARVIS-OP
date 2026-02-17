@@ -277,23 +277,34 @@ function localAnswer(prompt) {
   <p>I can help with that. Start by clarifying goal, constraints, and timeline. Then choose the simplest reliable approach and measure progress weekly.</p>`;
 }
 
+
+function formatPremiumAnswer(title, rawText, source = '') {
+  const text = (rawText || '').replace(/\s+/g, ' ').trim();
+  const sentences = text.split(/(?<=[.!?])\s+/).filter(Boolean);
+  const points = (sentences.length ? sentences : [text]).slice(0, 5);
+
+  const bullets = points
+    .map((line) => `<li><strong>Point:</strong> ${line}</li>`)
+    .join('');
+
+  return `<div class="ai-topic">${title}</div>
+  <p><span class="ai-subtopic">Subtopic:</span> Practical explanation</p>
+  <ul class="ai-points">${bullets}</ul>
+  ${source ? `<p class="ai-source"><small>Source: <a href="${source}" target="_blank" rel="noreferrer">Reference</a></small></p>` : ''}`;
+}
+
 async function buildAnswer(prompt) {
   const fact = await fetchDuckDuckGoAnswer(prompt);
   if (fact) {
-    return `<h4 style="margin:0 0 8px;color:#4a74c7">Topic: ${fact.title}</h4>
-    <p><strong>Subtopic:</strong> Web-verified quick answer</p>
-    <p>${fact.text}</p>
-    ${fact.source ? `<p><small>Source: <a href="${fact.source}" target="_blank" rel="noreferrer">Reference link</a></small></p>` : ''}`;
+    return formatPremiumAnswer(fact.title || getTopic(prompt), fact.text, fact.source || '');
   }
 
   const wiki = await fetchWikipediaSummary(prompt);
   if (wiki) {
-    return `<h4 style="margin:0 0 8px;color:#4a74c7">Topic: ${wiki.title}</h4>
-    <p><strong>Subtopic:</strong> Verified reference summary</p>
-    <p>${wiki.extract}</p>
-    ${wiki.source ? `<p><small>Source: <a href="${wiki.source}" target="_blank" rel="noreferrer">Wikipedia</a></small></p>` : ''}`;
+    return formatPremiumAnswer(wiki.title || getTopic(prompt), wiki.extract, wiki.source || '');
   }
-  return localAnswer(prompt);
+
+  return formatPremiumAnswer(getTopic(prompt), localAnswer(prompt).replace(/<[^>]*>/g, ''));
 }
 
 async function streamAIResponse(prompt) {
