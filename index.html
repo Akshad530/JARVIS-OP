@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>JARVIS - Premium Mobile Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <div class="grain"></div>
+
+      <aside class="sidebar" id="sidebar">
+        <div class="side-head">
+          <div class="brand-stack">
+            <div class="brand-row"><div class="jarvis-logo tiny"></div><strong>JARVIS</strong></div>
+            <small>Assistant</small>
+          </div>
+          <button class="icon-btn" id="closeSidebar" aria-label="Close sidebar">✕</button>
+        </div>
+
+        <label class="search-wrap">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4z"/></svg>
+          <input id="searchChat" placeholder="Discover" />
+        </label>
+
+        <h5 class="side-section">MENU</h5>
+        <div class="side-nav">
+          <button data-route="landing"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+          <button data-route="chat"><svg viewBox="0 0 24 24"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4v-4H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/></svg>Chat</button>
+          <button data-route="chat"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8"/></svg>Articles</button>
+          <button data-route="chat"><svg viewBox="0 0 24 24"><path d="M6 4h12a1 1 0 0 1 1 1v14l-7-3-7 3V5a1 1 0 0 1 1-1z"/></svg>Saved</button>
+          <button data-route="chat"><svg viewBox="0 0 24 24"><path d="M4 7h16M6 7v10h12V7M9 11h6"/></svg>Payment</button>
+        </div>
+
+        <h5 class="side-section">SAVED CHATS</h5>
+        <div class="saved-card">
+          <div id="conversationList" class="conversation-list"></div>
+          <button class="new-chat-btn" id="newChatBtn">
+            Chats
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg>
+          </button>
+        </div>
+
+
+
+                
+      </aside>
+
+      <section id="splashScreen" class="screen splash active">
+        <div class="splash-mockup">
+          <div class="splash-status"></div>
+          <div class="splash-content">
+            <div class="jarvis-logo large"></div>
+            <h1>Automate your<br />planning</h1>
+            <p>Plan faster with an intelligent assistant designed for your daily flow.</p>
+            <div class="splash-pill"><span>Get Started</span><button id="splashNextBtn" aria-label="Continue">➜</button></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="authCarousel" class="screen auth hidden">
+        <div class="auth-frame pink-auth">
+          <div class="auth-slider" id="authSlider">
+            <article class="auth-step form-step signin-step pink-step">
+              <div class="form-top pink-title">Sign In</div>
+              <form class="auth-form" id="loginForm">
+                <label>Email<input id="loginEmail" type="email" placeholder="Enter Email" required /></label>
+                <label>Password<input id="loginPass" type="password" placeholder="Enter Password" required /></label>
+                <div class="rowline"><label class="checkline"><input type="checkbox" />Remember me</label><a href="#">Forgot?</a></div>
+                <button type="submit" class="primary-btn pink-btn">Sign in</button>
+              </form>
+              <div class="social-line">or sign in with</div>
+              <div class="auth-icons"><button>G</button><button>f</button><button></button></div>
+              <div class="form-footer">Create account? <button type="button" id="goSignupLink">Sign up</button></div>
+            </article>
+
+            <article class="auth-step form-step signup-step pink-step">
+              <div class="form-top pink-title">Create Account</div>
+              <form class="auth-form" id="createForm">
+                <label>Full Name<input id="nameInput" type="text" placeholder="Enter Full Name" required /></label>
+                <label>Email<input id="emailInput" type="email" placeholder="Enter Email" required /></label>
+                <label>Password<input id="passInput" type="password" placeholder="Enter Password" minlength="6" required /></label>
+                <label class="checkline"><input type="checkbox" required />I agree to terms and privacy</label>
+                <button type="submit" class="primary-btn pink-btn">Create account</button>
+              </form>
+              <div class="social-line">or sign up with</div>
+              <div class="auth-icons"><button>G</button><button>f</button><button></button></div>
+              <div class="form-footer">Already have account? <button type="button" id="goLoginLink">Sign in</button></div>
+            </article>
+          </div>
+          <div class="dots"><span class="on"></span><span></span></div>
+        </div>
+      </section>
+
+      <section id="landingScreen" class="screen landing hidden">
+        <header class="landing-nav">
+          <div class="brand-row"><div class="jarvis-logo tiny"></div><span>JARVIS</span></div>
+          <button class="menu-btn" id="openSidebar">☰</button>
+        </header>
+        <main class="landing-main">
+          <h2>AI made simple.<br />Tech made practical.</h2>
+          <p>Helping you make the most of technology, with the least overwhelm.</p>
+          <div class="cta-row">
+            <button id="needThis" class="cta primary">I Need This</button>
+            <button class="cta secondary">Show Me How</button>
+          </div>
+
+          <div class="idea-card">
+            <div class="idea-glow"></div>
+            <h4>Quick Prompt</h4>
+            <p>Type once and jump straight into conversation.</p>
+            <form id="landingPromptForm" class="landing-prompt">
+              <input id="landingPromptInput" placeholder="Ask anything and jump to chat..." />
+              <button type="submit">➤</button>
+            </form>
+          </div>
+
+          <section class="signal-panel">
+            <div class="signal-glow"></div>
+            <div class="signal-orb"></div>
+            <div class="signal-bars">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <div class="signal-metrics">
+              <article><strong>98%</strong><small>Accuracy mode</small></article>
+              <article><strong>0.9s</strong><small>Response start</small></article>
+              <article><strong>24/7</strong><small>Assistant ready</small></article>
+            </div>
+          </section>
+        </main>
+      </section>
+
+      <section id="chatScreen" class="screen chat hidden">
+        <header class="chat-nav clean">
+          <div class="chat-brand">JARVIS</div>
+        </header>
+
+        <div id="chatEmpty" class="chat-empty">
+          <div class="jarvis-logo orb"></div>
+          <h2 id="greetName">Good Afternoon, Jason.</h2>
+          <p>What’s on your mind?</p>
+          <div class="suggest-grid">
+            <button data-prompt="Explain quantum computing in simple words">Explain quantum computing</button>
+            <button data-prompt="Create a practical weekly productivity plan for a student">Plan my week</button>
+            <button data-prompt="Summarize this article using key points">Summarize text</button>
+            <button data-prompt="Write a short poem about nature">Write a poem</button>
+          </div>
+        </div>
+
+        <div id="chatFeed" class="chat-feed"></div>
+        <div id="toast" class="toast">Copied to clipboard</div>
+
+        <form id="chatForm" class="chat-input card-style">
+          <textarea id="chatInput" placeholder="Ask me anything or begin typing..." autocomplete="off"></textarea>
+          <div class="composer-actions">
+            <button id="micBtn" type="button" class="icon-btn mic" aria-label="Use voice input">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 1 3 3v5a3 3 0 1 1-6 0V6a3 3 0 0 1 3-3zm-6 8a1 1 0 0 1 2 0 4 4 0 0 0 8 0 1 1 0 1 1 2 0 6 6 0 0 1-5 5.91V20h2a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2h2v-3.09A6 6 0 0 1 6 11z"/></svg>
+            </button>
+            <button id="sendBtn" type="submit" class="send-btn" disabled>➤</button>
+          </div>
+        </form>
+
+        <nav class="chat-tabbar" aria-label="Bottom navigation">
+          <button class="active" aria-label="Home">⌂</button>
+          <button aria-label="Chat">◌</button>
+          <button aria-label="History">◷</button>
+          <button aria-label="Profile">◯</button>
+        </nav>
+      </section>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
