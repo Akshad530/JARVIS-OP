@@ -494,9 +494,9 @@ input:focus, textarea:focus { border-color: #8ac7ff !important; box-shadow: 0 0 
   background: transparent;
   color: #777f90;
 }
-.send-btn { width: 30px; height: 30px; font-size: 14px; }
-.send-btn.active { background: transparent; color: #777f90; }
-.send-btn.stop { background: #ff6f6f; color: #fff; }
+.send-btn { width: 32px; height: 32px; font-size: 14px; border: 1px solid #d6d9e2; background: #eef1f7; color: #6f7890; }
+.send-btn.active { background: linear-gradient(135deg, #7a64ff, #9b78ff); border-color: transparent; color: #fff; }
+.send-btn.stop { background: #ff6f6f; border-color: transparent; color: #fff; }
 
 .suggest-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));

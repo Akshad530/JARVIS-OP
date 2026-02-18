@@ -389,6 +389,40 @@ function buildEssayAnswer(prompt) {
   return `An essay on ${topic} should begin with a clear thesis that introduces why the topic matters in practical and human terms. The introduction should set context, define scope, and present the central argument so the reader understands the direction immediately. In the body, explain the idea with examples, evidence, and balanced analysis. A strong paragraph structure—claim, explanation, example, and reflection—makes the essay persuasive and easy to follow. You can discuss benefits, limitations, and real-world impact to make the writing credible. In conclusion, restate the thesis in a sharper way, synthesize the key insights, and end with a forward-looking statement or call to action. This gives the essay closure while leaving the reader with a meaningful takeaway.`;
 }
 
+function taskAssistantAnswer(prompt) {
+  const q = (prompt || '').toLowerCase();
+
+  if (q.includes('summarize')) {
+    return {
+      title: 'Article Summarization',
+      text: 'A high-quality summary captures the main argument, the key supporting points, and the final takeaway without repeating every detail. Start by identifying the central claim, then list the strongest evidence used by the author, and end with the practical conclusion. If the article is technical, simplify jargon into plain language while preserving meaning. A concise professional summary should include: context, core idea, evidence highlights, and implications for the reader.'
+    };
+  }
+
+  if (q.includes('plan my week') || q.includes('weekly') || q.includes('productivity plan')) {
+    return {
+      title: 'Weekly Productivity Plan',
+      text: 'Use a weekly structure with clear priorities and time blocks. Monday should focus on planning and one major deep-work block. Tuesday to Thursday should each include two focused sessions for your highest-impact tasks, with communication and admin batched into short windows. Friday should be for review, cleanup, and preparing next week\'s top three goals. Keep daily checkpoints for progress and adapt the plan based on what is realistically completed.'
+    };
+  }
+
+  if (q.includes('write a poem') || q.includes('poem')) {
+    return {
+      title: 'Poem',
+      text: 'Beneath the quiet morning sky, the silver light begins to climb. The wind moves softly through the leaves, and time grows gentle as it breathes. The city slows, the noise turns mild, and hope returns, serene and wild. In every step, in every view, the day remakes itself as new.'
+    };
+  }
+
+  if (q.includes('quantum')) {
+    return {
+      title: 'Quantum Computing',
+      text: 'Quantum computing is a computing model that uses qubits instead of classical bits. While a classical bit is either 0 or 1, a qubit can represent a probability state, which allows some classes of problems to be explored more efficiently. The two core ideas are superposition and entanglement. In practice, quantum systems are promising for molecular simulation, optimization, and cryptography research, although current hardware is still noisy and limited in scale.'
+    };
+  }
+
+  return null;
+}
+
 function extractDefinitionTopic(prompt) {
   const q = (prompt || '').trim();
   const patterns = [
@@ -420,6 +454,11 @@ async function buildAnswer(prompt) {
   const essayAnswer = buildEssayAnswer(prompt);
   if (essayAnswer) {
     return formatPremiumAnswer(prompt, 'Essay Draft', essayAnswer);
+  }
+
+  const taskAnswer = taskAssistantAnswer(prompt);
+  if (taskAnswer) {
+    return formatPremiumAnswer(prompt, taskAnswer.title, taskAnswer.text);
   }
 
   const defTopic = extractDefinitionTopic(prompt);
