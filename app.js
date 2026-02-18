@@ -293,14 +293,20 @@ async function fetchDuckDuckGoAnswer(prompt) {
 }
 
 function localAnswer(prompt) {
-  const p = prompt.toLowerCase();
+  const p = (prompt || '').toLowerCase();
   if (p.includes('quantum')) {
     return 'Quantum computing uses qubits, which can represent probabilities instead of only 0 or 1. This allows certain complex calculations to be explored more efficiently than with classical computing methods. Today it is most useful for research in optimization, simulation, and cryptography, while practical large-scale use is still evolving due to hardware and error-correction limits.';
   }
   if (p.includes('productivity') || p.includes('plan')) {
     return 'A strong productivity plan starts with clear priorities, realistic time blocks, and regular review. Define the most important outcomes for the week, schedule focused deep-work sessions, and batch shallow tasks into smaller windows. End each day with a short review so your next day starts with direction and less decision fatigue.';
   }
-  return 'To answer this well, first define your goal, constraints, and expected outcome. Then choose a simple approach, test it quickly, and improve based on feedback. This gives you reliable progress while reducing confusion and unnecessary complexity.';
+  if (p.includes('definition') || p.startsWith('define ') || p.startsWith('what is ') || p.startsWith('who is ')) {
+    return 'Definition requests are best answered with three parts: a clear one-line meaning, practical context, and one example. The concept you asked about usually has a formal definition, then a simple explanation for everyday understanding, and finally a real-world use case showing why it matters.';
+  }
+  if (p.includes('explain')) {
+    return 'A strong explanation starts with a simple overview, then adds the key mechanism, and finally clarifies where it is used in practice. This makes the answer accurate while still easy to understand.';
+  }
+  return 'Here is a direct answer based on your question: start with the core idea, add important context, then apply it with one practical example. This approach gives clarity and useful next steps for almost any topic.';
 }
 
 
@@ -345,25 +351,59 @@ function formatPremiumAnswer(prompt, title, rawText, source = '') {
 
 
 function trySolveMath(prompt) {
-  const q = (prompt || '').toLowerCase();
-  const exprMatch = q.match(/(?:solve|calculate|what is|find)\s+([0-9\s+\-*/().%^]+)/i);
-  if (!exprMatch) return null;
-  const expr = exprMatch[1].replace(/\^/g, '**').replace(/[^0-9+\-*/().%*\s]/g, '').trim();
-  if (!expr || expr.length > 80) return null;
+  const raw = (prompt || '').trim();
+  if (!raw) return null;
+
+  const normalized = raw
+    .toLowerCase()
+    .replace(/[×x]/g, '*')
+    .replace(/[÷]/g, '/')
+    .replace(/,/g, '')
+    .replace(/\^/g, '**')
+    .replace(/%/g, '/100')
+    .replace(/\bplus\b/g, '+')
+    .replace(/\bminus\b/g, '-')
+    .replace(/\bmultiplied by\b/g, '*')
+    .replace(/\btimes\b/g, '*')
+    .replace(/\bdivided by\b/g, '/');
+
+  const match = normalized.match(/(?:solve|calculate|evaluate|what is|find)?\s*([0-9().+\-*/\s*]+)\s*=?\s*$/i);
+  const exprCandidate = (match?.[1] || normalized).replace(/[^0-9+\-*/().\s*]/g, '').trim();
+  if (!exprCandidate || exprCandidate.length > 100 || !/[+\-*/]/.test(exprCandidate)) return null;
+
   try {
-    const result = Function(`"use strict"; return (${expr});`)();
+    const result = Function(`"use strict"; return (${exprCandidate});`)();
     if (typeof result !== 'number' || !Number.isFinite(result)) return null;
-    return `The evaluated result for ${expr.replace(/\*\*/g, '^')} is ${result}. This is obtained by applying standard arithmetic order of operations (parentheses, exponents, multiplication/division, then addition/subtraction).`;
+    const prettyExpr = exprCandidate.replace(/\*\*/g, '^').replace(/\s+/g, '');
+    return `For ${prettyExpr}, the final answer is ${result}. I evaluated it using standard order of operations: parentheses first, then exponents, then multiplication/division, and finally addition/subtraction.`;
   } catch {
     return null;
   }
 }
+
 
 function buildEssayAnswer(prompt) {
   const match = prompt.match(/essay\s+(?:on|about)?\s*(.*)/i);
   if (!match) return null;
   const topic = (match[1] || 'the given topic').trim().replace(/[?.!]+$/, '') || 'the given topic';
   return `An essay on ${topic} should begin with a clear thesis that introduces why the topic matters in practical and human terms. The introduction should set context, define scope, and present the central argument so the reader understands the direction immediately. In the body, explain the idea with examples, evidence, and balanced analysis. A strong paragraph structure—claim, explanation, example, and reflection—makes the essay persuasive and easy to follow. You can discuss benefits, limitations, and real-world impact to make the writing credible. In conclusion, restate the thesis in a sharper way, synthesize the key insights, and end with a forward-looking statement or call to action. This gives the essay closure while leaving the reader with a meaningful takeaway.`;
+}
+
+function extractDefinitionTopic(prompt) {
+  const q = (prompt || '').trim();
+  const patterns = [
+    /^(?:define|definition of)\s+(.+)$/i,
+    /^(?:what is|who is|tell me about|explain)\s+(.+)$/i
+  ];
+  for (const r of patterns) {
+    const m = q.match(r);
+    if (m?.[1]) return m[1].replace(/[?.!]+$/, '').trim();
+  }
+  return null;
+}
+
+function definitionFallback(topic) {
+  return `${topic} is best understood as a concept with a clear core meaning, practical context, and real-world usage. In simple terms, it refers to the main idea behind ${topic}, why it matters, and how it is applied in real situations. If you want, I can also give a beginner, intermediate, or expert-level definition next.`;
 }
 
 async function buildAnswer(prompt) {
@@ -382,6 +422,19 @@ async function buildAnswer(prompt) {
     return formatPremiumAnswer(prompt, 'Essay Draft', essayAnswer);
   }
 
+  const defTopic = extractDefinitionTopic(prompt);
+  if (defTopic) {
+    const wikiDef = await fetchWikipediaSummary(defTopic);
+    if (wikiDef) {
+      return formatPremiumAnswer(prompt, wikiDef.title || defTopic, wikiDef.extract, wikiDef.source || '');
+    }
+    const webDef = await fetchDuckDuckGoAnswer(defTopic);
+    if (webDef) {
+      return formatPremiumAnswer(prompt, webDef.title || defTopic, webDef.text, webDef.source || '');
+    }
+    return formatPremiumAnswer(prompt, defTopic, definitionFallback(defTopic));
+  }
+
   const fact = await fetchDuckDuckGoAnswer(prompt);
   if (fact) {
     return formatPremiumAnswer(prompt, fact.title || getTopic(prompt), fact.text, fact.source || '');
@@ -394,6 +447,7 @@ async function buildAnswer(prompt) {
 
   return formatPremiumAnswer(prompt, getTopic(prompt), localAnswer(prompt));
 }
+
 
 async function streamAIResponse(prompt) {
   let convo = currentConversation();
